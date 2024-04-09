@@ -10,7 +10,7 @@ class HotelApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hotel demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       initialRoute: intialPage ?? RouteName.splashScreen,

@@ -96,7 +96,7 @@ class _OnboardPageState extends State<OnboardPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: TextButton(
-          onPressed: () => {},
+          onPressed: () => Navigator.pushNamed(context, RouteName.loginPage),
           child: const Text(
             'Already have an Account',
             style: TextStyle(color: Colors.blue),
@@ -119,7 +119,7 @@ class _OnboardPageState extends State<OnboardPage> {
     List<Widget> indicators = [];
 
     for (int i = 1; i <= pageSize; i++) {
-      double size = 10;
+      double size = 8;
       final color =
           (activedIndex + 1) == i ? Colors.blue : Colors.blue.withOpacity(0.2);
       indicators.add(Padding(
