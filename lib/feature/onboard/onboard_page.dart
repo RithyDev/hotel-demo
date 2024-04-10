@@ -106,11 +106,11 @@ class _OnboardPageState extends State<OnboardPage> {
 
   Widget _controllerTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 44),
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
       ),
     );
   }

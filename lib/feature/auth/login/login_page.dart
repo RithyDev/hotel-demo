@@ -3,6 +3,7 @@ import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
+import 'package:hotel_app/widget/app_outlined_button.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ class LoginPage extends StatelessWidget {
     final viewModel = LoginViewModel.createNewInstance();
     viewModel.doOnUserAuthenticated(() => Navigator.pushNamedAndRemoveUntil(
         context, RouteName.homePage, (route) => false));
-        
+
     return ChangeNotifierProvider(
         create: (context) => viewModel, child: _renderPageConsumer(context));
   }
@@ -39,6 +40,7 @@ class LoginPage extends StatelessWidget {
       body: SizedBox(
         height: double.infinity,
         child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics()),
           child: SafeArea(
@@ -103,6 +105,7 @@ class LoginPage extends StatelessWidget {
   Widget _loginTitle() {
     return const Text(
       'Login Account',
+      
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
     );
   }
@@ -116,6 +119,10 @@ class LoginPage extends StatelessWidget {
         onChanged: (value) => viewModel.handleOnEmailChange(value),
         errorMessage: viewModel.email.errorMessage,
         icon: const Icon(Icons.email_outlined),
+        iconOnFocused: Icon(
+          Icons.email_outlined,
+          color: Theme.of(context).primaryColorDark,
+        ),
       ),
       const SizedBox(
         height: 8,
@@ -127,6 +134,10 @@ class LoginPage extends StatelessWidget {
         errorMessage: viewModel.password.errorMessage,
         onChanged: (value) => viewModel.handleOnPasswordChange(value),
         icon: const Icon(Icons.lock_open_outlined),
+        iconOnFocused: Icon(
+          Icons.lock_open_outlined,
+          color: Theme.of(context).primaryColorDark,
+        ),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -135,7 +146,8 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 32),
-      _signInButton(viewModel)
+      _signInButton(viewModel),
+      ..._loginWithOtherMethod(context)
     ];
   }
 
@@ -154,5 +166,22 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _loginWithOtherMethod(BuildContext context) {
+    return [
+      const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text(
+          'Or using other method',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      AppOutlinedButton(
+          title: 'Sign In with Google', icon: Icon(Icons.golf_course)),
+      const SizedBox(height: 16),
+      AppOutlinedButton(
+          title: 'Sign In with Facebook', icon: Icon(Icons.facebook))
+    ];
   }
 }
