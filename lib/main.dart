@@ -11,5 +11,5 @@ void main() async {
 
 Future<void> runWrapper() async {
   await applySystemDisplay();
-  runApp(HotelApp(intialPage: RouteName.onboardPage));
+  runApp(HotelApp(intialPage: RouteName.splashScreen));
 }
