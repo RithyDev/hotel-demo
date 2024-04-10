@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/onboard/onboard_page_info.dart';
 import 'package:hotel_app/route/app_route.dart';
 
@@ -38,12 +39,7 @@ class _OnboardPageState extends State<OnboardPage> {
     return Container(
       padding: const EdgeInsets.only(bottom: 200),
       color: color,
-      child: Image.network(
-        model.imageUrl,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-      ),
+      child: Image.asset(model.imageCover, fit: BoxFit.cover),
     );
   }
 
@@ -81,6 +77,7 @@ class _OnboardPageState extends State<OnboardPage> {
 
   Padding _renderDescription(String model) {
     return Padding(
+      key: ValueKey(model),
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Opacity(
         opacity: 0.8,
@@ -89,7 +86,7 @@ class _OnboardPageState extends State<OnboardPage> {
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 12),
         ),
-      ),
+      ).animate().fade().slide(),
     );
   }
 
@@ -107,12 +104,13 @@ class _OnboardPageState extends State<OnboardPage> {
 
   Widget _controllerTitle(String title) {
     return Padding(
+      key: ValueKey(title),
       padding: const EdgeInsets.symmetric(horizontal: 44),
       child: Text(
         title,
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-      ),
+      ).animate().fade(duration: const Duration(milliseconds: 1500)),
     );
   }
 
@@ -121,9 +119,12 @@ class _OnboardPageState extends State<OnboardPage> {
 
     for (int i = 1; i <= pageSize; i++) {
       double size = 8;
+      final isSelected = (activedIndex + 1) == i;
       final color =
-          (activedIndex + 1) == i ? Colors.blue : Colors.blue.withOpacity(0.2);
-      indicators.add(Padding(
+          isSelected ? Colors.blue : Colors.blue.withOpacity(0.2);
+      
+      var padding = Padding(
+        key: ValueKey('$i$isSelected'),
         padding: const EdgeInsets.all(4.0),
         child: Container(
           width: size,
@@ -131,11 +132,14 @@ class _OnboardPageState extends State<OnboardPage> {
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(size / 2)),
         ),
-      ));
+      ).animate().fade();
+      indicators.add(padding);
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
+        key: const ValueKey('indicator-row'),
         mainAxisAlignment: MainAxisAlignment.center,
         children: indicators,
       ),

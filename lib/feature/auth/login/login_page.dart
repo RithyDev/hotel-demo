@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
 import 'package:hotel_app/model/async_data.dart';
+import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
@@ -105,7 +107,6 @@ class LoginPage extends StatelessWidget {
   Widget _loginTitle() {
     return const Text(
       'Login Account',
-      
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
     );
   }
@@ -178,10 +179,15 @@ class LoginPage extends StatelessWidget {
         ),
       ),
       AppOutlinedButton(
-          title: 'Sign In with Google', icon: Icon(Icons.golf_course)),
+          title: 'Sign In with Google',
+          icon: SvgPicture.asset(
+            ImageSource.iconGoogleLogo,
+            width: 24,
+            height: 24,
+          )),
       const SizedBox(height: 16),
-      AppOutlinedButton(
-          title: 'Sign In with Facebook', icon: Icon(Icons.facebook))
+      const AppOutlinedButton(
+          title: 'Sign In with Facebook', icon: Icon(Icons.facebook, size: 32))
     ];
   }
 }

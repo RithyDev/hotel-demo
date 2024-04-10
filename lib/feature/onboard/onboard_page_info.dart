@@ -1,30 +1,31 @@
+import 'package:hotel_app/resource/image_resource.dart';
+
 class OnboardPageInfo {
-  final String imageUrl;
+  
   final String title;
   final String description;
+  final String imageCover;
   
   OnboardPageInfo({
-    required this.imageUrl,
+    
     required this.title,
-    required this.description
+    required this.description,
+    required this.imageCover
   });
 }
 
 List<OnboardPageInfo> getPagesInfo() {
   return  [
     OnboardPageInfo(
-        imageUrl:
-            'https://i.pinimg.com/originals/c2/cb/54/c2cb54caa9d8a31c2fdfe0640e702ff5.jpg',
+        imageCover: ImageSource.imgOnboard1,
         title: 'Booking Hotels Anywhere is Easier',
         description: 'Anywhere in the world, we always with you'),
     OnboardPageInfo(
-        imageUrl:
-            'https://e0.pxfuel.com/wallpapers/303/921/desktop-wallpaper-brilliant-travel-accessories-iphone-travel-travel-iphone-travel-quote-phone.jpg',
+        imageCover: ImageSource.imgOnboard2,
         title: 'Plan Your Vacation With\nEase',
         description: 'There are places to discover'),
     OnboardPageInfo(
-        imageUrl:
-            'https://wallpapercave.com/wp/wp5053460.jpg',
+        imageCover: ImageSource.imgOnboard3,
         title: 'Thousands Of Hotels To Be Found',
         description: 'Only for you, and anyone you loved')
   ];
