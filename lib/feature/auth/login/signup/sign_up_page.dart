@@ -11,6 +11,7 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //All the logic and behavoir is controlled by viewModel
     final viewModel = SignUpViewModel.createNewInstance();
 
     return ChangeNotifierProvider(
@@ -63,42 +64,61 @@ class SignUpPage extends StatelessWidget {
     final iconColor = Theme.of(context).primaryColorDark;
     return [
       const SizedBox(height: 16),
-      AppInputField(
-        hint: 'Username*',
-        placeholder: 'Alex@123',
-        icon: const Icon(Icons.person_outline),
-        iconOnFocused: Icon(Icons.person_outline, color: iconColor),
-      ),
+      _inputUsername(viewModel, iconColor),
       const SizedBox(height: 16),
-      AppInputField(
-        hint: 'Email or Phone Number*',
-        placeholder: 'user@domin.com',
-        icon: const Icon(Icons.email_outlined),
-        iconOnFocused: Icon(
-          Icons.email_outlined,
-          color: iconColor,
-        ),
-      ),
+      _inputEmailOrPhoneNumber(iconColor, viewModel),
       const SizedBox(height: 16),
-      AppInputField(
-        hint: 'Password*',
-        placeholder: '**** abc',
-        obscureText: true,
-        icon: const Icon(Icons.lock_open_outlined),
-        iconOnFocused: Icon(Icons.lock_open_outlined, color: iconColor),
-      ),
+      _inputPassword(viewModel, iconColor),
       const SizedBox(height: 24),
-      _createAccountButton(),
-      
+      _createAccountButton(viewModel),
       const Padding(
         padding: EdgeInsets.all(16),
-        child: Text('Or using other method', textAlign: TextAlign.center,),
+        child: Text(
+          'Or using other method',
+          textAlign: TextAlign.center,
+        ),
       ),
-      
       _signUpWithGoogleButton(),
       const SizedBox(height: 8),
       _signUpWithFacebookButton()
     ];
+  }
+
+  AppInputField _inputPassword(SignUpViewModel viewModel, Color iconColor) {
+    return AppInputField(
+      hint: 'Password*',
+      placeholder: '**** abc',
+      onChanged: (value) => viewModel.setPassword(value),
+      errorMessage: viewModel.formData.password.errorMessage,
+      obscureText: true,
+      icon: const Icon(Icons.lock_open_outlined),
+      iconOnFocused: Icon(Icons.lock_open_outlined, color: iconColor),
+    );
+  }
+
+  Widget _inputEmailOrPhoneNumber(Color iconColor, SignUpViewModel viewModel) {
+    return AppInputField(
+      hint: 'Email or Phone Number*',
+      placeholder: 'user@domin.com',
+      onChanged: (value) => viewModel.setEmailOrPhone(value),
+      errorMessage: viewModel.formData.emailOrPhone.errorMessage,
+      icon: const Icon(Icons.email_outlined),
+      iconOnFocused: Icon(
+        Icons.email_outlined,
+        color: iconColor,
+      ),
+    );
+  }
+
+  Widget _inputUsername(SignUpViewModel viewModel, Color iconColor) {
+    return AppInputField(
+      hint: 'Username*',
+      placeholder: 'Alex@123',
+      onChanged: (value) => viewModel.setUsername(value),
+      errorMessage: viewModel.formData.username.errorMessage,
+      icon: const Icon(Icons.person_outline),
+      iconOnFocused: Icon(Icons.person_outline, color: iconColor),
+    );
   }
 
   Widget _signUpWithFacebookButton() {
@@ -120,11 +140,13 @@ class SignUpPage extends StatelessWidget {
         ));
   }
 
-  Widget _createAccountButton() {
+  Widget _createAccountButton(SignUpViewModel viewModel) {
     return TextButton(
-        onPressed: () => {},
+        onPressed:
+            viewModel.isValidInputForm() ? () => viewModel.signUp() : null,
         style: TextButton.styleFrom(
           backgroundColor: Colors.blue,
+          disabledBackgroundColor: Colors.blue.withOpacity(0.4),
           padding: const EdgeInsets.all(16),
         ),
         child: const Text(
