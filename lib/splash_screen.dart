@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/auth/signup/otp/sign_up_confitm_otp.dart';
-import 'package:hotel_app/feature/onboard/onboard_page.dart';
-import 'package:hotel_app/route/app_route.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -24,7 +22,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void navigateNext() {
-    Widget page = const OnboardPage();
+    Widget page = const SignUpConfirmOtpPage();
     final route = PageRouteBuilder(
         pageBuilder: (_, __, ___) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
@@ -87,12 +85,12 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Hetel',
+          'Hotel',
           style: titleStyle,
         ),
         Text(
           'demo',
-          style: titleStyle.copyWith(color: Theme.of(context).primaryColorDark),
+          style: titleStyle.copyWith(color: Theme.of(context).primaryColor),
         )
       ],
     );

@@ -160,6 +160,8 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void onCreatePressed(BuildContext context) {
-    Navigator.of(context).pushNamed(RouteName.signUpOtpPage);
+    Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
+      "username": "hello"
+    });
   }
 }

@@ -17,7 +17,7 @@ class HotelApp extends StatelessWidget {
             builder: (context, state, child) => _renderApp(state)));
   }
 
-  MaterialApp _renderApp(GlobalState state) {
+  Widget _renderApp(GlobalState state) {
     final primaryColor = state.primaryColor;
     return MaterialApp(
       title: 'Hotel demo',

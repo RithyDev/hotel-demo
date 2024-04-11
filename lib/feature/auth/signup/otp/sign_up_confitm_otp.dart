@@ -1,30 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hotel_app/feature/auth/signup/otp/otp_success_page.dart';
 import 'package:hotel_app/feature/auth/signup/otp/sign_up_otp_viewmodel.dart';
 import 'package:hotel_app/global_state.dart';
+import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
+import 'package:hotel_app/widget/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
-class SignUpConfirmOtpPage extends StatelessWidget {
+class SignUpConfirmOtpPage extends StatefulWidget {
   const SignUpConfirmOtpPage({super.key});
 
   @override
+  State<SignUpConfirmOtpPage> createState() => _SignUpConfirmOtpPageState();
+}
+
+class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
+  late VoidCallback stateNotifyListener;
+  late SignUpConfirmOtpViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = Provider.of<SignUpConfirmOtpViewModel>(context, listen: false);
+    initialEvent(viewModel);
+  }
+
+  void initialEvent(SignUpConfirmOtpViewModel viewModel) {
+    stateNotifyListener = () {
+      observeOnOtpStateChange(viewModel.otpState);
+    };
+    viewModel.addListener(stateNotifyListener);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    viewModel.removeListener(stateNotifyListener);
+  }
+
+  void observeOnOtpStateChange(AsyncData<String>? state) {
+    if (state is Success) {
+      showDialog(context);
+    }
+  }
+
+  void showDialog(BuildContext context) {
+    showModalBottomSheet(
+        context: context, builder: (context) => const SuccessOtpSignUpPage());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final SignUpConfirmOtpViewModel viewModel = Provider.of(context);
+    Provider.of<SignUpConfirmOtpViewModel>(context);
     return _renderMainContent(context, viewModel);
+  }
+
+  Widget _shouldDisplayBlockLoading(BuildContext context) {
+    return switch (viewModel.otpState?.state) {
+      AsyncState.loading => appBlockLoading('Processing Otp'),
+      _ => const SizedBox()
+    };
   }
 
   Widget _renderMainContent(
       BuildContext context, SignUpConfirmOtpViewModel viewModel) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            ..._renderToolbar(context),
-            _renderOtpForm(context, viewModel)
-          ],
-        ),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Column(
+              children: [
+                ..._renderToolbar(context),
+                Text('${viewModel.otpState?.state}'),
+                _renderOtpForm(context, viewModel)
+              ],
+            ),
+          ),
+          _shouldDisplayBlockLoading(context)
+        ],
       ),
     );
   }
@@ -90,7 +145,7 @@ class SignUpConfirmOtpPage extends StatelessWidget {
           clearText: true,
           showFieldAsBox: true,
           borderWidth: 1,
-          onCodeChanged: (value) => {},
+          onSubmit: (value) => viewModel.setOtpCode(value),
           focusedBorderColor: Theme.of(context).primaryColor,
           textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
           enabledBorderColor: Colors.grey.withOpacity(0.2),
