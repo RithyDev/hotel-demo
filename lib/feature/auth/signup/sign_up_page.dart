@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hotel_app/feature/auth/login/signup/sign_up_viewmodel.dart';
+import 'package:hotel_app/feature/auth/signup/sign_up_viewmodel.dart';
 import 'package:hotel_app/resource/image_resource.dart';
+import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +71,7 @@ class SignUpPage extends StatelessWidget {
       const SizedBox(height: 16),
       _inputPassword(viewModel, iconColor),
       const SizedBox(height: 24),
-      _createAccountButton(viewModel),
+      _createAccountButton(context, viewModel),
       const Padding(
         padding: EdgeInsets.all(16),
         child: Text(
@@ -140,10 +141,11 @@ class SignUpPage extends StatelessWidget {
         ));
   }
 
-  Widget _createAccountButton(SignUpViewModel viewModel) {
+  Widget _createAccountButton(BuildContext context, SignUpViewModel viewModel) {
     return TextButton(
-        onPressed:
-            viewModel.isValidInputForm() ? () => viewModel.signUp() : null,
+        onPressed: viewModel.isValidInputForm()
+            ? () => onCreatePressed(context)
+            : null,
         style: TextButton.styleFrom(
           backgroundColor: Colors.blue,
           disabledBackgroundColor: Colors.blue.withOpacity(0.4),
@@ -153,5 +155,9 @@ class SignUpPage extends StatelessWidget {
           'Create Account',
           style: TextStyle(color: Colors.white, fontSize: 16),
         ));
+  }
+
+  void onCreatePressed(BuildContext context) {
+    Navigator.of(context).pushNamed(RouteName.signUpOtpPage);
   }
 }

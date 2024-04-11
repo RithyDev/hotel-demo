@@ -38,7 +38,6 @@ class _OnboardPageState extends State<OnboardPage> {
   Widget _renderPage(BuildContext context, Color color, OnboardPageInfo model) {
     return Container(
       padding: const EdgeInsets.only(bottom: 200),
-      color: color,
       child: Image.asset(model.imageCover, fit: BoxFit.cover),
     );
   }

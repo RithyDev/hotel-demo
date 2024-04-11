@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hotel_app/feature/auth/login/signup/signup_form_data.dart';
+import 'package:hotel_app/feature/auth/signup/signup_form_data.dart';
 import 'package:hotel_app/repository/user_repo.dart';
 
 class SignUpViewModel extends ChangeNotifier {
