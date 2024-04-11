@@ -1,9 +1,17 @@
 import 'package:hotel_app/model/input_form_data.dart';
+import 'package:hotel_app/utils/form_validator.dart';
 
 class SignUpFormData {
+  
   InputFormData<String> username = InputFormData(null);
   InputFormData<String> emailOrPhone = InputFormData(null);
   InputFormData<String> password = InputFormData(null);
+
+  void reset() {
+    username.clear();
+    emailOrPhone.clear();
+    password.clear();  
+  }
 
   bool isValid() {
     return compileUsername() && compileEmailOrPhone() && compilePassword();
@@ -13,40 +21,15 @@ class SignUpFormData {
     compileUsername();
   }
 
-  bool compileUsername() {
-    final value = username.value;
-    if (value == null) {
-      return false;
-    }
-    final RegExp regex = RegExp(r'^[a-zA-Z0-9_]{6,16}$');
-    bool isValid = regex.hasMatch(value);
-    username.errorMessage = isValid ? null : 'Invalid username';
-    return isValid;
-  }
+  bool compileUsername() => validateUsername(username);
 
   bool compileEmailOrPhone() {
-    final value = emailOrPhone.value;
-    if (value == null) {
-      return false;
-    }
-    final RegExp regex = RegExp(r'^\d{9}(?:\d)?$');
-    final RegExp emailRegex =
-        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-    bool isValid = regex.hasMatch(value) || emailRegex.hasMatch(value);
-    emailOrPhone.errorMessage =
-        isValid ? null : 'Invalid email or phone number';
-    return isValid;
+    final value = emailOrPhone.value ?? '';
+    final RegExp regex = RegExp(r'^[0-9]+$');
+    final isNumber = regex.hasMatch(value);
+    return isNumber ? validatePhoneNumber(emailOrPhone) : validateEmail(emailOrPhone);
   }
+      
 
-  bool compilePassword() {
-    final value = password.value;
-    if (value == null) {
-      return false;
-    }
-
-    final RegExp regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$');
-    final isValid = regex.hasMatch(value);
-    password.errorMessage = isValid ? null : 'Password is correct format';
-    return isValid;
-  }
+  bool compilePassword() => validatePassword(password);
 }

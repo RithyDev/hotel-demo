@@ -13,7 +13,6 @@ class RouteName {
   static const onboardPage = '/onboard_page';
   static const loginPage = '/login_page';
   static const homePage = '/home_page';
-  
 }
 
 final Map<String, WidgetBuilder> appRounte = {
@@ -21,7 +20,7 @@ final Map<String, WidgetBuilder> appRounte = {
   RouteName.onboardPage: (context) => const OnboardPage(),
   RouteName.homePage: (context) => const HomePage(),
   RouteName.loginPage: (context) => const LoginPage(),
-  RouteName.signUpPage: (context) => const SignUpPage(),
+  RouteName.signUpPage: (context) => SignUpPage(),
   RouteName.signUpOtpPage:(context) => const SignUpConfirmOtpPage()
 };
 

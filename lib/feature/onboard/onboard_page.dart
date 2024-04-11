@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/onboard/onboard_page_info.dart';
 import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/widget/app_button_styles.dart';
 
 class OnboardPage extends StatefulWidget {
   const OnboardPage({super.key});
@@ -66,7 +67,7 @@ class _OnboardPageState extends State<OnboardPage> {
         children: [
           _controllerTitle(pageInfo.title),
           _renderDescription(pageInfo.description),
-          _renderPageIndicator(pagesInfo.length, currentPage),
+          _renderPageIndicator(context,pagesInfo.length, currentPage),
           _createAccountButton(),
           _renderLoginButton()
         ],
@@ -90,13 +91,14 @@ class _OnboardPageState extends State<OnboardPage> {
   }
 
   Widget _renderLoginButton() {
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: TextButton(
           onPressed: () => Navigator.pushNamed(context, RouteName.loginPage),
-          child: const Text(
+          child: Text(
             'Already have an Account',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Theme.of(context).primaryColor),
           )),
     );
   }
@@ -113,14 +115,14 @@ class _OnboardPageState extends State<OnboardPage> {
     );
   }
 
-  Widget _renderPageIndicator(int pageSize, int activedIndex) {
+  Widget _renderPageIndicator(BuildContext context,int pageSize, int activedIndex) {
     List<Widget> indicators = [];
-
+    final themeData = Theme.of(context);
     for (int i = 1; i <= pageSize; i++) {
       double size = 8;
       final isSelected = (activedIndex + 1) == i;
       final color =
-          isSelected ? Colors.blue : Colors.blue.withOpacity(0.2);
+          isSelected ? themeData.primaryColor : themeData.primaryColor.withOpacity(0.2);
       
       var padding = Padding(
         key: ValueKey('$i$isSelected'),
@@ -147,22 +149,13 @@ class _OnboardPageState extends State<OnboardPage> {
 
   Widget _createAccountButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 34),
-      child: TextButton(
-        onPressed: () => Navigator.pushNamed(context, RouteName.signUpPage),
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.blue,
-        ),
-        child: const Padding(
-          padding: EdgeInsets.all(6),
-          child: Text(
-            'Create Account',
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: appRoundedButton(context, title: 'Create Account', onPressed: () => navigateToSignUp()),
     );
+  }
+
+  void navigateToSignUp() {
+    Navigator.of(context).pushNamed(RouteName.signUpPage);
   }
 
   void handleOnClick() {

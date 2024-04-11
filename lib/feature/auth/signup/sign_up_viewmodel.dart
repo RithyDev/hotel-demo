@@ -4,10 +4,13 @@ import 'package:hotel_app/feature/auth/signup/signup_form_data.dart';
 import 'package:hotel_app/repository/user_repo.dart';
 
 class SignUpViewModel extends ChangeNotifier {
+  
   final UserRepository userRepo;
   final formData = SignUpFormData();
 
   SignUpViewModel._(this.userRepo);
+
+  void reset() => formData.reset();
 
   void setUsername(String value) { 
     formData.username.value = value;

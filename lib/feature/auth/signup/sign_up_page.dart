@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/feature/auth/signup/sign_up_viewmodel.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<SignUpViewModel>(context, listen: false).reset();
+  }
 
   @override
   Widget build(BuildContext context) {
     //All the logic and behavoir is controlled by viewModel
-    final viewModel = SignUpViewModel.createNewInstance();
-
-    return ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: Consumer<SignUpViewModel>(
-        builder: (context, value, child) =>
-            _renderMainContent(context, viewModel),
-      ),
-    );
+    SignUpViewModel viewModel = Provider.of<SignUpViewModel>(context);
+    return _renderMainContent(context, viewModel);
   }
 
   Widget _renderMainContent(BuildContext context, SignUpViewModel viewModel) {
@@ -128,6 +134,7 @@ class SignUpPage extends StatelessWidget {
         icon: Icon(
           Icons.facebook,
           size: 30,
+          color: Colors.blue,
         ));
   }
 
@@ -142,19 +149,14 @@ class SignUpPage extends StatelessWidget {
   }
 
   Widget _createAccountButton(BuildContext context, SignUpViewModel viewModel) {
-    return TextButton(
-        onPressed: viewModel.isValidInputForm()
-            ? () => onCreatePressed(context)
-            : null,
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.blue,
-          disabledBackgroundColor: Colors.blue.withOpacity(0.4),
-          padding: const EdgeInsets.all(16),
-        ),
-        child: const Text(
-          'Create Account',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ));
+    return Container(
+      key: ValueKey('${viewModel.isValidInputForm()}'),
+      child: appRoundedButton(context,
+          title: 'Create Account',
+          onPressed: viewModel.isValidInputForm()
+              ? () => onCreatePressed(context)
+              : null),
+    ).animate().fade();
   }
 
   void onCreatePressed(BuildContext context) {
