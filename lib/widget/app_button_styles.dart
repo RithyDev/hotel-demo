@@ -18,3 +18,10 @@ Widget appRoundedButton(BuildContext context,
         child: displayChild),
   );
 }
+
+void showMessageDialog(BuildContext context,
+    {String? title, required String message}) {
+  var dialogContent =
+      AlertDialog(title: Text(title ?? ''), content: Text(message));
+  showDialog(context: context, builder: (context) => dialogContent);
+}

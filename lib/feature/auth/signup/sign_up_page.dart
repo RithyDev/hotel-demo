@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/feature/auth/signup/sign_up_viewmodel.dart';
+import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
+import 'package:hotel_app/widget/dialog_utils.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +19,35 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  late SignUpViewModel viewModel;
+  late VoidCallback notifyListeners;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<SignUpViewModel>(context, listen: false).reset();
+    viewModel = Provider.of<SignUpViewModel>(context, listen: false);
+    viewModel.reset();
+    notifyListeners = () {
+      observedOnInitStateChange(viewModel.init);
+    };
+
+    viewModel.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    viewModel.removeListener(notifyListeners);
+    super.dispose();
+  }
+
+  void observedOnInitStateChange(AsyncData<String>? state) {
+    if (state is Success) {
+      Navigator.of(context).pushNamed(RouteName.signUpOtpPage,
+          arguments: {'ref': state?.data ?? ''});
+    } else if (state is Fail) {
+      showMessageDialog(context,
+          title: 'Request failed', message: 'Failed message');
+    }
   }
 
   @override
@@ -32,22 +59,40 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _renderMainContent(BuildContext context, SignUpViewModel viewModel) {
     return Scaffold(
-      body: SizedBox(
-        height: double.infinity,
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ..._pageTitle(context),
-                  ..._renderInputForm(context, viewModel)
-                ],
-              ),
+      body: Stack(
+        children: [
+          _renderSignUpForm(context, viewModel),
+          _renderBlockLoadingIfNeed(context, viewModel)
+        ],
+      ),
+    );
+  }
+
+  Widget _renderBlockLoadingIfNeed(
+      BuildContext context, SignUpViewModel viewModel) {
+    var state = viewModel.init;
+    return switch (state?.state) {
+      AsyncState.loading => appBlockLoading('Loading...'),
+      _ => const SizedBox()
+    };
+  }
+
+  Widget _renderSignUpForm(BuildContext context, SignUpViewModel viewModel) {
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ..._pageTitle(context),
+                ..._renderInputForm(context, viewModel)
+              ],
             ),
           ),
         ),
@@ -153,15 +198,14 @@ class _SignUpPageState extends State<SignUpPage> {
       key: ValueKey('${viewModel.isValidInputForm()}'),
       child: appRoundedButton(context,
           title: 'Create Account',
-          onPressed: viewModel.isValidInputForm()
-              ? () => onCreatePressed(context)
-              : null),
+          onPressed:
+              viewModel.isValidInputForm() ? () => viewModel.signUp() : null),
     ).animate().fade();
   }
 
   void onCreatePressed(BuildContext context) {
-    Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
-      "username": "hello"
-    });
+    // Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
+    //   "username": "hello"
+    // });
   }
 }

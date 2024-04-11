@@ -43,6 +43,9 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
   void observeOnOtpStateChange(AsyncData<String>? state) {
     if (state is Success) {
       showDialog(context);
+    } else if (state is Fail) {
+      showMessageDialog(context,
+          title: 'Request failed', message: 'You have submit the incrrect OTP');
     }
   }
 
@@ -53,8 +56,12 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<SignUpConfirmOtpViewModel>(context);
-    return _renderMainContent(context, viewModel);
+    var args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    viewModel.resolvedArg(args);
+    return Consumer<SignUpConfirmOtpViewModel>(
+        builder: (context, viewModel, child) =>
+            _renderMainContent(context, viewModel));
   }
 
   Widget _shouldDisplayBlockLoading(BuildContext context) {
@@ -73,7 +80,6 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
             child: Column(
               children: [
                 ..._renderToolbar(context),
-                Text('${viewModel.otpState?.state}'),
                 _renderOtpForm(context, viewModel)
               ],
             ),
@@ -206,7 +212,8 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
             GestureDetector(
                 onTap: () => performOnBackPress(context),
                 child: const Icon(Icons.arrow_back)),
-            const Text('Verification'),
+            const Text('Verification',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(width: 24)
           ],
         ),
