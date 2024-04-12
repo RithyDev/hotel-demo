@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/feature/auth/signup/sign_up_viewmodel.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/remote/model/sign_init_info.dart';
+import 'package:hotel_app/remote/service/exceptions.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
@@ -50,8 +51,13 @@ class _SignUpPageState extends State<SignUpPage> {
         'emailOrPhone': viewModel.formData.emailOrPhone.value
       });
     } else if (state is Fail) {
+      String errorMessage = 'Oop! something went wrong';
+      var err = (state as Fail).throwable;
+      if (err is UserAlreadyExistException) {
+        errorMessage = "This username is already exists. Please use another one";
+      }
       await showMessageDialog(context,
-          title: 'Request failed', message: 'Failed message');
+          title: 'Request failed', message: errorMessage);
       viewModel.resetInitState();
     }
   }

@@ -5,6 +5,7 @@ import 'package:hotel_app/database/model/user.dart';
 import 'package:hotel_app/database/model/user_dao.dart';
 import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/remote/model/user.dart';
+import 'package:hotel_app/remote/service/exceptions.dart';
 import 'package:hotel_app/remote/service/user_service.dart';
 
 class JsonUserServiceImpl implements UserService {
@@ -35,7 +36,7 @@ class JsonUserServiceImpl implements UserService {
     bool isExist = await userDao.findOne(username) != null;
 
     if (isExist) {
-      throw Exception('This username already exsisted');
+      throw UserAlreadyExistException();
     }
     String otp = generateOTP(5);
     otps[ref] = {
@@ -43,7 +44,7 @@ class JsonUserServiceImpl implements UserService {
       "user": UserInfo(
           username: username, emailOrPhone: emailOrPhone, password: password)
     };
-    debugPrint('-----> $otps');
+    
     return SignUpInitInfo(ref: ref, otp: otp);
   }
 
@@ -56,7 +57,7 @@ class JsonUserServiceImpl implements UserService {
       throw Exception('TODO make readable');
     }
     if (info['otp'] != otp) {
-      throw Exception('Invalid OTP');
+      throw InvalidOtpException();
     }
     UserInfo user = info['user'];
     userDao.add(User(
