@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hotel_app/feature/auth/signup/otp/otp_success_page.dart';
@@ -84,9 +85,39 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
               ],
             ),
           ),
-          _shouldDisplayBlockLoading(context)
+          _renderOtpMessage(),
+          _shouldDisplayBlockLoading(context),
         ],
       ),
+    );
+  }
+
+  Widget _renderOtpMessage() {
+    return switch (viewModel.otp != null) {
+      true => Positioned(bottom: 32, left: 0, right: 0, child: _toastOtpView()),
+      _ => const SizedBox()
+    }
+        .animate(delay: const Duration(seconds: 1))
+        .slide()
+        .fadeIn()
+        .fadeOut(delay: const Duration(seconds: 5));
+  }
+
+  Widget _toastOtpView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+            decoration: BoxDecoration(
+                color: Colors.black54, borderRadius: BorderRadius.circular(20)),
+            child: Text(
+              'Your otp: ${viewModel.otp}',
+              style: const TextStyle(color: Colors.white),
+              textAlign: TextAlign.center,
+            )),
+      ],
     );
   }
 
@@ -103,39 +134,50 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
               Column(
                 children: [
                   _renderImageHeader(context),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Text(
-                      'Verification Code',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  Opacity(
-                    opacity: 0.5,
-                    child: Text('We have sent the code verification to'),
-                  ),
+                  _renderFormTitle(),
+                  _renderSubtitle(),
                   Text(
-                    'email@domain.com',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    viewModel.emailOrPhone ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
               _renderOtpView(context, viewModel),
               _renderSubmitButton(context),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Didn't received the code?"),
-                    TextButton(onPressed: () => {}, child: Text('Resend')),
-                  ],
-                ),
-              )
+              _renderResendOtpContent()
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _renderResendOtpContent() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Didn't received the code?"),
+          TextButton(onPressed: () => {}, child: const Text('Resend')),
+        ],
+      ),
+    );
+  }
+
+  Opacity _renderSubtitle() {
+    return const Opacity(
+      opacity: 0.5,
+      child: Text('We have sent the code verification to'),
+    );
+  }
+
+  Padding _renderFormTitle() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        'Verification Code',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
     );
   }

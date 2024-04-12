@@ -1,13 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hotel_app/database/model/user.dart';
+import 'package:hotel_app/database/model/user_dao.dart';
+import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/remote/model/user.dart';
 import 'package:hotel_app/remote/service/user_service.dart';
 
 class JsonUserServiceImpl implements UserService {
-  //TODO: save to local data or database
-  List<UserInfo> users = [];
+  final UserDao userDao;
   Map<String, dynamic> otps = {};
+
+  JsonUserServiceImpl(this.userDao);
 
   @override
   Future<void> createUser(
@@ -22,21 +26,25 @@ class JsonUserServiceImpl implements UserService {
   }
 
   @override
-  Future<String> initCreateUser(
+  Future<SignUpInitInfo> initCreateUser(
       String username, String emailOrPhone, String password) async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
+
     var ref = '${generateRandomString(20)}${DateTime.now().millisecond}';
-    bool isExist = users.any((user) => user.username == username);
+
+    bool isExist = await userDao.findOne(username) != null;
+
     if (isExist) {
       throw Exception('This username already exsisted');
     }
+    String otp = generateOTP(5);
     otps[ref] = {
-      "otp": generateOTP(5),
+      "otp": otp,
       "user": UserInfo(
           username: username, emailOrPhone: emailOrPhone, password: password)
     };
     debugPrint('-----> $otps');
-    return ref;
+    return SignUpInitInfo(ref: ref, otp: otp);
   }
 
   @override
@@ -51,7 +59,10 @@ class JsonUserServiceImpl implements UserService {
       throw Exception('Invalid OTP');
     }
     UserInfo user = info['user'];
-    users.add(user);
+    userDao.add(User(
+        username: user.username,
+        email: user.emailOrPhone,
+        password: user.password));
     return generateRandomString(20);
   }
 

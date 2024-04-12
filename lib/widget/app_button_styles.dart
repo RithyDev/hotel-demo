@@ -19,9 +19,9 @@ Widget appRoundedButton(BuildContext context,
   );
 }
 
-void showMessageDialog(BuildContext context,
+Future<dynamic> showMessageDialog(BuildContext context,
     {String? title, required String message}) {
   var dialogContent =
       AlertDialog(title: Text(title ?? ''), content: Text(message));
-  showDialog(context: context, builder: (context) => dialogContent);
+  return showDialog(context: context, builder: (context) => dialogContent);
 }

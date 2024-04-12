@@ -8,6 +8,8 @@ class SignUpConfirmOtpViewModel extends ChangeNotifier {
   String _code = "";
   String get code => _code;
   String? ref;
+  String? otp;
+  String? emailOrPhone;
 
   AsyncData<String>? _otpState;
   AsyncData<String>? get otpState => _otpState;
@@ -18,7 +20,8 @@ class SignUpConfirmOtpViewModel extends ChangeNotifier {
   void resolvedArg(Map<String, dynamic>? args) {
     if (args != null) {
       ref = args['ref'];
-      debugPrint('-----> $ref');
+      otp = args['otp'];
+      emailOrPhone = args['emailOrPhone'];
     }
   }
 

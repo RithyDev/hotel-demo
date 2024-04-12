@@ -1,3 +1,4 @@
+import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/remote/service/user_service.dart';
 
 class UserRepository {
@@ -13,7 +14,7 @@ class UserRepository {
     }
   }
 
-  Future<String> initRegisterUser(
+  Future<SignUpInitInfo> initRegisterUser(
       String username, String emailOrPhone, String password) {
     return userService.initCreateUser(username, emailOrPhone, password);
   }

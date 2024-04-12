@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/feature/auth/signup/sign_up_viewmodel.dart';
 import 'package:hotel_app/model/async_data.dart';
+import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
@@ -40,13 +41,18 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  void observedOnInitStateChange(AsyncData<String>? state) {
+  void observedOnInitStateChange(AsyncData<SignUpInitInfo>? state) async {
     if (state is Success) {
-      Navigator.of(context).pushNamed(RouteName.signUpOtpPage,
-          arguments: {'ref': state?.data ?? ''});
+      viewModel.resetInitState();
+      Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
+        'ref': state?.data?.ref ?? '',
+        'otp': state?.data?.otp,
+        'emailOrPhone': viewModel.formData.emailOrPhone.value
+      });
     } else if (state is Fail) {
-      showMessageDialog(context,
+      await showMessageDialog(context,
           title: 'Request failed', message: 'Failed message');
+      viewModel.resetInitState();
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hotel_app/feature/auth/signup/signup_form_data.dart';
 import 'package:hotel_app/model/async_data.dart';
+import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/repository/user_repo.dart';
 
 class SignUpViewModel extends ChangeNotifier {
@@ -9,10 +10,10 @@ class SignUpViewModel extends ChangeNotifier {
   final UserRepository userRepo;
   final formData = SignUpFormData();
   
-  AsyncData<String>? _init;
-  AsyncData<String>? get init => _init;
+  AsyncData<SignUpInitInfo>? _init;
+  AsyncData<SignUpInitInfo>? get init => _init;
 
-  void setInitState(AsyncData<String>? state) {
+  void setInitState(AsyncData<SignUpInitInfo>? state) {
     _init = state;
     notifyListeners();
   }
@@ -20,6 +21,10 @@ class SignUpViewModel extends ChangeNotifier {
   SignUpViewModel._(this.userRepo);
 
   void reset() => formData.reset();
+
+  void resetInitState() {
+    _init = null;
+  }
 
   void setUsername(String value) { 
     formData.username.value = value;
@@ -49,8 +54,8 @@ class SignUpViewModel extends ChangeNotifier {
       var emailOrPhone = formData.emailOrPhone.value??'';
       var password = formData.password.value??'';
       setInitState(Loading());
-      String ref = await userRepo.initRegisterUser(username, emailOrPhone, password);
-      setInitState(Success(ref));
+      var res = await userRepo.initRegisterUser(username, emailOrPhone, password);
+      setInitState(Success(res));
     } on Exception catch(e) {
       setInitState(Fail(e));
     }

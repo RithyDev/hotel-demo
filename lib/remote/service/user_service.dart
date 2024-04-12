@@ -1,6 +1,8 @@
+import 'package:hotel_app/remote/model/sign_init_info.dart';
+
 abstract class UserService {
 
-  Future<String> initCreateUser(String username, String emailOrPhone, String password);
+  Future<SignUpInitInfo> initCreateUser(String username, String emailOrPhone, String password);
 
   Future<String> submitCreateUser(String ref, String otp);
   
