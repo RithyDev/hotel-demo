@@ -1,50 +1,121 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:hotel_app/feature/home/home_viewmodel.dart';
-import 'package:hotel_app/model/async_data.dart';
-import 'package:hotel_app/repository/user_repo.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/home/widget/home_headline.dart';
+import 'package:hotel_app/feature/home/widget/home_toolbar.dart';
+import 'package:hotel_app/feature/home/widget/item_hotel_nearby.dart';
+import 'package:hotel_app/feature/home/widget/item_suggest_hotel.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final UserRepository userRepo = GetIt.I<UserRepository>();
-    return ChangeNotifierProvider(
-      create: (context) => HomeViewModel(userRepo: userRepo),
-      child: _renderPageConsumer(context),
-    );
-  }
-
-  Widget _renderPageConsumer(BuildContext context) {
     return Scaffold(
-      body: Consumer<HomeViewModel>(
-        builder: (context, viewModel, child) => _renderOnModelStateChange(context, viewModel),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _renderHeader(context),
+          Expanded(
+            child: _mainScrollContainer(context),
+          )
+        ],
       ),
     );
+    
   }
 
-  Widget _renderOnModelStateChange(BuildContext context, HomeViewModel viewModel) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Count ${viewModel.count}'),
-            TextButton(onPressed: () => viewModel.increase(), child: const Text('Increase')),
-            _renderOnTokenStateChange(viewModel.token)
-          ],
+  Widget _mainScrollContainer(BuildContext context) {
+    
+    return CustomScrollView(
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        _renderSliverBox(
+          child: _renderHeadlineInfo(),
         ),
+        SliverList(
+            delegate: SliverChildListDelegate([
+          _renderRecommendedHotelsContainer(),
+        ])),
+        _renderSliverBox(
+          child: _renderSuggestedHotels(context).animate(
+            delay: const Duration(seconds: 1)
+          ).slideX(
+            begin: 1,
+            end: 0.0
+          ),
+        ),
+        _renderSliverBox(child: _nearByHotelTitle(context)),
+        SliverList(
+            delegate: SliverChildBuilderDelegate(
+          childCount: 10,
+          (context, index) => ItemHotelNearby(),
+        ))
+      ],
+    ).animate().fade();
+  }
+
+  Widget _nearByHotelTitle(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Nearby Hotels',
+            style: _listHeadLineStyle,
+          ),
+          TextButton(onPressed: () {}, child: const Text('See All')),
+        ],
       ),
     );
   }
 
-  Widget _renderOnTokenStateChange(AsyncData<String>? state) {
-    return switch(state?.state) {
-      AsyncState.loading => const CircularProgressIndicator(),
-      AsyncState.success => Text(state?.data ?? ''),
-      _ => const SizedBox()
-    };
+  Widget _renderRecommendedHotelsContainer() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Recommended Hotel🔥',
+            style: _listHeadLineStyle,
+          ),
+          TextButton(onPressed: () => {}, child: const Text('See all')),
+        ],
+      ),
+    );
   }
+
+  Widget _renderSuggestedHotels(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double itemWith = screenWidth * 0.7;
+    double itemHight = itemWith * 1.22;
+
+    return SizedBox(
+      height: itemHight,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        scrollDirection: Axis.horizontal,
+        key: const ValueKey('list_builder_suggessted_hotels'),
+        itemCount: 4,
+        itemBuilder: (context, index) =>
+            SizedBox(width: itemWith, child: const ItemSuggestedHotel()),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _renderSliverBox({required Widget child}) =>
+      SliverToBoxAdapter(child: child);
+
+  Widget _renderHeader(BuildContext context) {
+    return const HomeToolbar();
+  }
+
+  Widget _renderHeadlineInfo() => const HomePageHeadlineInfo();
+
+  TextStyle get _listHeadLineStyle =>
+      const TextStyle(fontWeight: FontWeight.w600, fontSize: 16);
 }

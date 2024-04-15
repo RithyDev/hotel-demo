@@ -6,6 +6,16 @@ class UserDao {
 
   UserDao._();
 
+  Future<List<User>> where(bool Function(User element) predicable) async {
+    final box = await Hive.openBox(boxName);
+    List<User> result = box.values
+        .where((element) => element is User ? predicable(element) : false)
+        .map((e) => e as User).toList();
+
+    await box.close();
+    return result;
+  }
+
   Future<User?> findOne(String username) async {
     final box = await Hive.openBox(boxName);
     User? user = box.get(username);

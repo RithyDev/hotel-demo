@@ -7,7 +7,7 @@ bool validateUsername(InputFormData<String> username) {
     }
     final RegExp regex = RegExp(r'^[a-zA-Z0-9_]{6,16}$');
     bool isValid = regex.hasMatch(value);
-    username.errorMessage = isValid ? null : 'Invalid username';
+    username.errorMessage = isValid ? null : 'Invalid username format';
     return isValid;
   }
 
@@ -41,6 +41,6 @@ bool validatePassword(InputFormData<String> password) {
   }
   final RegExp regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$');
   final isValid = regex.hasMatch(value);
-  password.errorMessage = isValid ? null : 'Incorrect phone number';
+  password.errorMessage = isValid ? null : 'Incorrect password format';
   return isValid;
 }

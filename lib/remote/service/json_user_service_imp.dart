@@ -21,9 +21,15 @@ class JsonUserServiceImpl implements UserService {
   }
 
   @override
-  Future<String> login(String username, String password) async {
-    await Future.delayed(const Duration(milliseconds: 2000));
-    return "implement your token";
+  Future<String> login(String emailOrPhone, String password) async {
+    await Future.delayed(const Duration(seconds: 2));
+    var result = await userDao.where(
+        (user) => user.email == emailOrPhone && user.password == password);
+    if (result.isEmpty) {
+      throw Exception('user not found');
+    }
+
+    return "TODO: generate token";
   }
 
   @override
@@ -32,11 +38,17 @@ class JsonUserServiceImpl implements UserService {
     await Future.delayed(const Duration(seconds: 2));
 
     var ref = '${generateRandomString(20)}${DateTime.now().millisecond}';
+    var existedUsers = await userDao.where(
+        (user) => user.username == username || user.email == emailOrPhone);
 
-    bool isExist = await userDao.findOne(username) != null;
+    bool isExist = existedUsers.isNotEmpty;
 
     if (isExist) {
-      throw UserAlreadyExistException();
+      final usernameExisted =
+          existedUsers.any((user) => user.username == username);
+      throw usernameExisted
+          ? UserAlreadyExistException(username)
+          : ExistedEmailOrPhoneNumberException(emailOrPhone);
     }
     String otp = generateOTP(5);
     otps[ref] = {
@@ -44,7 +56,7 @@ class JsonUserServiceImpl implements UserService {
       "user": UserInfo(
           username: username, emailOrPhone: emailOrPhone, password: password)
     };
-    
+
     return SignUpInitInfo(ref: ref, otp: otp);
   }
 

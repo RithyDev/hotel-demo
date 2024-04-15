@@ -8,9 +8,7 @@ class HomeViewModel extends ChangeNotifier {
   //represent state of model
   final HomeService _homeService = HomeService.initial();
 
-  HomeViewModel({required this.userRepo}) {
-    getToken();
-  }
+  HomeViewModel({required this.userRepo});
   
   int get count => _homeService.count;
   AsyncData<String>? get token => _homeService.token;
@@ -19,20 +17,5 @@ class HomeViewModel extends ChangeNotifier {
     _homeService.increase();
     notifyListeners();
   }
-
-  void getToken() async {
-    setToken(Loading());
-    try {
-      final token = await userRepo.getToken();
-      setToken(Success(token??'token not found'));
-    } catch (e){
-      setToken(Success('Token not found'));
-    }
   
-  }
-
-  void setToken(AsyncData<String> newValue) {
-    _homeService.setToken(newValue);
-    notifyListeners();
-  }
 }

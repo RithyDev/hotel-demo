@@ -53,8 +53,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } else if (state is Fail) {
       String errorMessage = 'Oop! something went wrong';
       var err = (state as Fail).throwable;
-      if (err is UserAlreadyExistException) {
-        errorMessage = "This username is already exists. Please use another one";
+      if (err is IOExcepection) {
+        errorMessage = err.errorMessage;
       }
       await showMessageDialog(context,
           title: 'Request failed', message: errorMessage);

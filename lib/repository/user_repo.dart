@@ -14,6 +14,9 @@ class UserRepository {
     }
   }
 
+  Future<dynamic> login(String emailOrPhone, String password) => 
+    userService.login(emailOrPhone, password);
+
   Future<SignUpInitInfo> initRegisterUser(
       String username, String emailOrPhone, String password) {
     return userService.initCreateUser(username, emailOrPhone, password);

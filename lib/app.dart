@@ -22,6 +22,7 @@ class HotelApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hotel demo',
       theme: ThemeData(
+        fontFamily: 'MyOpenSan',
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         primaryColor: primaryColor,
         primaryColorLight: primaryColor.withOpacity(0.2),

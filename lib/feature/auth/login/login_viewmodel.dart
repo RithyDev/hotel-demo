@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hotel_app/feature/auth/login/login_form_data.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/model/input_form_data.dart';
 import 'package:hotel_app/repository/user_repo.dart';
@@ -7,12 +8,15 @@ import 'package:hotel_app/repository/user_repo.dart';
 class LoginViewModel extends ChangeNotifier {
 
   final UserRepository userRepo;
-  final InputFormData<String> email = InputFormData(null);
-  final InputFormData<String> password = InputFormData(null);
+
+  final LoginFormData formData = LoginFormData();
+
+  InputFormData<String> get email => formData.emailOrPhone;
+  InputFormData<String> get password => formData.password;
 
   Function()? _handleOnUserAuthenticated;
-
-  AsyncData<String>? authState;
+  AsyncData<String>? _authState;
+  AsyncData<String>? get authState => _authState;
 
   LoginViewModel._(this.userRepo);
 
@@ -22,29 +26,27 @@ class LoginViewModel extends ChangeNotifier {
 
   void handleOnEmailChange(String value) {
     email.value = value;
-    if (email.errorMessage != null) {
-      email.errorMessage = null;
-      notifyListeners();
-    }
+    formData.compileUsername();
+    notifyListeners();
   }
 
   void handleOnPasswordChange(String value) {
     password.value = value;
-    if (password.errorMessage != null) {
-      password.errorMessage = null;
-      notifyListeners();
-    }
+    formData.compilePassword();
+    notifyListeners();
   }
 
   void login() async {
-    if (!validateFormData()) {
-      compileFormError();
+    if (!formData.isValid()) {
       return;
     }
     try {
       invokeAuthStateChange(Loading());
-      authState = Loading();
-      final token = await userRepo.getToken();
+    
+      final String emailOrPhone = email.value?? '';
+      final String pwd = password.value??'';
+
+      final token = await userRepo.login(emailOrPhone, pwd);
       invokeAuthStateChange(Success(token ?? ''));
       if (_handleOnUserAuthenticated != null) {
         _handleOnUserAuthenticated!();
@@ -55,8 +57,12 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   void invokeAuthStateChange(AsyncData<String> newState) {
-    authState = newState;
+    _authState = newState;
     notifyListeners();
+  }
+  
+  void resetAuthState() {
+    _authState = null;
   }
 
   void compileFormError() {

@@ -1,23 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hotel_app/core/observable.dart';
 import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
+import 'package:hotel_app/feature/home/home_page.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
+import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = LoginViewModel.createNewInstance();
-    viewModel.doOnUserAuthenticated(() => Navigator.pushNamedAndRemoveUntil(
-        context, RouteName.homePage, (route) => false));
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
+  BuildContext? currentContext;
+  late VoidCallback viewModelListener;
+  final viewModel = LoginViewModel.createNewInstance();
+
+  late UniqueOnly<AsyncData<String?>> authStateHandler;
+
+  @override
+  void initState() {
+    super.initState();
+    //Prevent from viemodel invoke the same state, UniqueOnly will only invoke on different value of state
+    authStateHandler = UniqueOnly(onValueChange: onAuthStateChange);
+    viewModelListener = () {
+      authStateHandler.setValue(viewModel.authState);
+    };
+    viewModel.addListener(viewModelListener);
+  }
+
+  void onAuthStateChange(AsyncData<String?>? state) {
+    if (state == null) {
+      return;
+    }
+    if (state is Success) {
+      navigateToHomeAndResetRounte();
+    } else if (state is Fail) {
+      showMessageDialog(context,
+          message: 'Invalid emial, phone number or password.',
+          title: 'Login failed');
+    }
+  }
+
+  void navigateToHomeAndResetRounte() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false);
+  }
+
+  @override
+  void dispose() {
+    viewModel.removeListener(viewModelListener);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context) => viewModel, child: _renderPageConsumer(context));
   }
@@ -147,26 +193,16 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 32),
-      _signInButton(viewModel),
+      _signInButton(context, viewModel),
       ..._loginWithOtherMethod(context)
     ];
   }
 
-  Widget _signInButton(LoginViewModel viewModel) {
-    return TextButton(
-      onPressed: () => viewModel.login(),
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.blue,
-      ),
-      child: const Padding(
-        padding: EdgeInsets.all(6.0),
-        child: Text(
-          'Sign-In',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
+  Widget _signInButton(BuildContext context, LoginViewModel viewModel) {
+    bool buttonEnabled = viewModel.formData.isValid();
+    return appRoundedButton(context,
+        title: 'Sign In',
+        onPressed: buttonEnabled ? () => viewModel.login() : null);
   }
 
   List<Widget> _loginWithOtherMethod(BuildContext context) {

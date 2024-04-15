@@ -11,6 +11,8 @@ class AppInputField extends StatefulWidget {
   final bool? obscureText;
   final Widget? icon;
   final Widget? iconOnFocused;
+  final Widget? subfixIcon;
+  final double? borderRounded;
 
   const AppInputField(
       {super.key,
@@ -21,7 +23,7 @@ class AppInputField extends StatefulWidget {
       this.errorMessage,
       this.obscureText,
       this.icon,
-      this.iconOnFocused});
+      this.iconOnFocused, this.subfixIcon, this.borderRounded});
 
   @override
   State<AppInputField> createState() => _AppInputFieldState();
@@ -59,7 +61,7 @@ class _AppInputFieldState extends State<AppInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(widget.hint ?? ''),
+        widget.hint != null ? Text(widget.hint ?? '') : const SizedBox(),
         const SizedBox(height: 8),
         _renderInputBox(context),
         _renderErrorMessage(context)
@@ -89,19 +91,23 @@ class _AppInputFieldState extends State<AppInputField> {
   }
 
   Widget _renderInputBox(BuildContext context) {
-    return TextField(
-        maxLines: 1,
-        focusNode: _focusNode,
-        onChanged: (value) => invokeOnChange(value),
-        obscureText: showInputObscureText,
-        decoration: outlineInputField(
-          context,
-          isError: widget.errorMessage != null,
-          icon: hasFocused || hasText
-              ? (widget.iconOnFocused ?? widget.icon)
-              : widget.icon,
-          suffixIcon: _renderObscureTextToggle(),
-        ).copyWith(hintText: widget.placeholder));
+    return SizedBox(
+      height: 64,
+      child: TextField(
+          maxLines: 1,
+          focusNode: _focusNode,
+          onChanged: (value) => invokeOnChange(value),
+          obscureText: showInputObscureText,
+          decoration: outlineInputField(
+            context,
+            borderRouned: widget.borderRounded,
+            isError: widget.errorMessage != null,
+            icon: hasFocused || hasText
+                ? (widget.iconOnFocused ?? widget.icon)
+                : widget.icon,
+            suffixIcon: widget.subfixIcon ?? _renderObscureTextToggle(),
+          ).copyWith(hintText: widget.placeholder)),
+    );
   }
 
   void invokeOnChange(String value) {
@@ -116,12 +122,12 @@ class _AppInputFieldState extends State<AppInputField> {
   Widget? _renderObscureTextToggle() {
     final child = switch (widget.obscureText) {
       true => Icon(
-        key: ValueKey<bool>(showInputObscureText),
-        showInputObscureText
-            ? Icons.visibility_off_outlined
-            : Icons.visibility_outlined,
-        color: Colors.grey,
-      ),
+          key: ValueKey<bool>(showInputObscureText),
+          showInputObscureText
+              ? Icons.visibility_off_outlined
+              : Icons.visibility_outlined,
+          color: Colors.grey,
+        ),
       _ => const SizedBox()
     };
 
