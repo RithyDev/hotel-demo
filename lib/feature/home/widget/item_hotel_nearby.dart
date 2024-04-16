@@ -12,46 +12,40 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
   double? imageSize;
 
   @override
-  void initState() {
-    super.initState();
-    // WidgetsBinding.instance.endOfFrame.then((value) {
-    //   if (mounted && imageSize != null) {
-    //     setState(() {});
-    //   }
-    // });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return _builderItem(context);
   }
 
   Widget _builderItem(BuildContext context) {
-    WidgetsBinding.instance.endOfFrame.then((value) {
-      if (mounted && imageSize != null) {
-        setState(() {});
-      }
-    });
+    if (imageSize == null) {
+      WidgetsBinding.instance.endOfFrame.then((value) {
+        if (mounted && imageSize != null) {
+          setState(() {});
+        }
+      });
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.04),
-          borderRadius: BorderRadius.circular(24)
-        ),
+            color: Theme.of(context).primaryColor.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.all(12),
         child: Stack(
           children: [
             Padding(
-              padding:
-                  EdgeInsets.only(left: (imageSize ?? 0) + 12, top: 4, bottom: 4),
+              padding: EdgeInsets.only(
+                  left: (imageSize ?? 0) + 12, top: 4, bottom: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     'Hotel name',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColorDark),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).primaryColorDark),
                   ),
                   Opacity(
                       opacity: 0.5,
@@ -87,8 +81,6 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
       ),
     );
   }
-
-  
 
   Widget _buildPriceAndRatingInfo(BuildContext context) {
     return Row(

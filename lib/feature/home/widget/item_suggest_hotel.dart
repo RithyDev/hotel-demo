@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 
-class ItemSuggestedHotel extends StatelessWidget {
+class ItemSuggestedHotel extends StatefulWidget {
   const ItemSuggestedHotel({super.key});
+
+  @override
+  State<ItemSuggestedHotel> createState() => _ItemSuggestedHotelState();
+}
+
+class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
+  bool isFavoritePlace = false;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +21,6 @@ class ItemSuggestedHotel extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(20)),
-        
         child: Stack(
           children: [
             _renderHotelPicture(),
@@ -21,9 +28,9 @@ class ItemSuggestedHotel extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _priceInfoBuilder(context),
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Icon(Icons.favorite_outline, color: Colors.white,),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: _renderFavoriteButton(),
                 )
               ],
             ),
@@ -32,6 +39,26 @@ class ItemSuggestedHotel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _renderFavoriteButton() {
+    var icon = isFavoritePlace ? Icons.favorite : Icons.favorite_outline;
+    Color color = isFavoritePlace ? Colors.red : Colors.white;
+    var child = Icon(icon, color: color);
+    var animatedChild = child
+        .animate(key: ValueKey<bool>(isFavoritePlace))
+        .scale(
+            duration: const Duration(milliseconds: 240),
+            begin: const Offset(0.5, 0.5),
+            end: const Offset(1, 1));
+
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            isFavoritePlace = !isFavoritePlace;
+          });
+        },
+        child: animatedChild);
   }
 
   Padding _priceInfoBuilder(BuildContext context) {
