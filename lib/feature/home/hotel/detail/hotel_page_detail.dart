@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/home/hotel/detail/item_common_facilities.dart';
+import 'package:hotel_app/feature/home/hotel/detail/item_hotel_overview.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 
 class HotelPageDetail extends StatefulWidget {
@@ -16,6 +19,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   Color get actionColor => isAppbarCollapsed ? Colors.black : Colors.white;
   bool isAppbarCollapsed = false;
   int selectedSliderPage = 0;
+  double expandedHeight = 0;
 
   @override
   void initState() {
@@ -23,7 +27,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
 
     _scrollController.addListener(() {
       var isCollaped = _scrollController.hasClients &&
-          _scrollController.offset > (200 - kToolbarHeight);
+          _scrollController.offset > (expandedHeight - kToolbarHeight);
       if (isCollaped != isAppbarCollapsed) {
         setState(() {
           isAppbarCollapsed = isCollaped;
@@ -53,24 +57,32 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   Widget _renderMainScrollView(BuildContext context) {
     return CustomScrollView(
       controller: _scrollController,
-      slivers: [
-        _renderAppbar(context),
-        SliverList(
-            delegate: SliverChildBuilderDelegate(
-          childCount: 100,
-          (context, index) => Text('data'),
-        ))
-      ],
+      slivers: [_renderAppbar(context), 
+      _renderCommonFacillitiesInfo(),
+      SliverToBoxAdapter(
+        child: HotelOverview(),
+      )],
     );
   }
 
-  Widget _renderAppbar(BuildContext context) {
+  Widget _renderCommonFacillitiesInfo() {
+    return const SliverToBoxAdapter(
+      child: HotelCommonFacilities(),
+    );
+  }
+
+  
+
+  Widget _renderAppbar(
+    BuildContext context,
+  ) {
     var size = MediaQuery.of(context).size;
     var r = const Radius.circular(20);
+    expandedHeight = size.width * 0.8;
     return SliverAppBar(
       pinned: true,
-      toolbarHeight: 70,
-      expandedHeight: size.width * 0.8,
+      toolbarHeight: 56,
+      expandedHeight: expandedHeight,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
       forceMaterialTransparency: false,
@@ -78,9 +90,8 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
       flexibleSpace: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(bottomLeft: r, bottomRight: r)
-        ),  
+            color: Colors.white,
+            borderRadius: BorderRadius.only(bottomLeft: r, bottomRight: r)),
         child: FlexibleSpaceBar(
           collapseMode: CollapseMode.pin,
           background: Stack(
@@ -111,7 +122,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
     return Text(
       'Detail Hotel',
       style: _appbarTextStyle.copyWith(
-          fontWeight: FontWeight.bold, fontSize: 20, color: actionColor),
+          fontWeight: FontWeight.bold, fontSize: 16, color: actionColor),
     );
   }
 
@@ -150,7 +161,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
             _renderSlideIndicator(),
             Text(model?.name ?? '',
                 style: _appbarTextStyle.copyWith(
-                    fontSize: 20, fontWeight: FontWeight.bold)),
+                    fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Row(
               children: [
@@ -162,7 +173,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: _appbarTextStyle.copyWith(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
+                        fontSize: 14, fontWeight: FontWeight.w600)),
               ],
             )
           ],
@@ -183,17 +194,18 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
 
   Widget _pageIndicator(int index) {
     var isSelected = index == selectedSliderPage;
-    return AnimatedScale(
-        scale: isSelected ? 1 : 0.8,
-        duration: const Duration(milliseconds: 240),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: Icon(
-            Icons.circle,
-            size: 14,
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: AnimatedContainer(
+        width: isSelected ? 24 : 6,
+        height: 6,
+        decoration: BoxDecoration(
             color: Colors.white.withOpacity(isSelected ? 1 : 0.4),
-          ),
-        ));
+            borderRadius: BorderRadius.circular(6)),
+        duration: const Duration(milliseconds: 240),
+      ),
+    );
   }
 
   Widget _renderImageSliderBox() {

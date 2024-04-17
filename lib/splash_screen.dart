@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hotel_app/feature/auth/signup/otp/sign_up_confitm_otp.dart';
-import 'package:hotel_app/feature/home/home_page.dart';
 import 'package:hotel_app/feature/home/main_page.dart';
-import 'package:hotel_app/feature/onboard/onboard_page.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -20,8 +17,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void runDelay() {
-    Future.delayed(const Duration(seconds: 2))
-        .then((value) => navigateNext());
+    Future.delayed(const Duration(seconds: 2)).then((value) => navigateNext());
   }
 
   void navigateNext() {
