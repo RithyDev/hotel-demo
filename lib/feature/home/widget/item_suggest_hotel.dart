@@ -49,7 +49,7 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
         .animate(key: ValueKey<bool>(isFavoritePlace))
         .scale(
             duration: const Duration(milliseconds: 240),
-            begin: const Offset(0.5, 0.5),
+            begin: const Offset(1.2, 1.2),
             end: const Offset(1, 1));
 
     return GestureDetector(

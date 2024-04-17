@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/home/page_tab_behavior.dart';
 import 'package:hotel_app/feature/home/widget/home_headline.dart';
 import 'package:hotel_app/feature/home/widget/home_toolbar.dart';
 import 'package:hotel_app/feature/home/widget/item_hotel_nearby.dart';
 import 'package:hotel_app/feature/home/widget/item_suggest_hotel.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget implements TabPageBehavior {
+
   const HomePage({super.key});
+
+  @override
+  void onReady() {
+    
+  }
+
+  @override
+  Widget get page => this;
 
   @override
   Widget build(BuildContext context) {
