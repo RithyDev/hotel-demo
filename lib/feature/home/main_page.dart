@@ -13,9 +13,9 @@ class _MainPageState extends State<MainPage> {
   int selectedTap = 0;
   final _pages = [
     const HomePage(),
-    Scaffold(backgroundColor: Colors.red),
-    Scaffold(backgroundColor: Colors.blue),
-    Scaffold(backgroundColor: Colors.yellow)
+    const Scaffold(backgroundColor: Colors.red),
+    const Scaffold(backgroundColor: Colors.blue),
+    const Scaffold(backgroundColor: Colors.yellow)
   ];
 
   @override

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
+
 import 'package:hotel_app/resource/image_resource.dart';
 
 class ItemHotelNearby extends StatefulWidget {
-  const ItemHotelNearby({super.key});
+  final HotelModel model;
+  const ItemHotelNearby({super.key, required this.model});
 
   @override
   State<ItemHotelNearby> createState() => _ItemHotelNearbyState();
@@ -10,6 +13,8 @@ class ItemHotelNearby extends StatefulWidget {
 
 class _ItemHotelNearbyState extends State<ItemHotelNearby> {
   double? imageSize;
+
+  HotelModel get model => widget.model;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Hotel name',
+                    model.name,
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -50,7 +55,7 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
                   Opacity(
                       opacity: 0.5,
                       child: Text(
-                        'Address detail where the hotel is located',
+                        model.address,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )),
@@ -59,34 +64,38 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
                 ],
               ),
             ),
-            Positioned(
-                top: 0,
-                bottom: 0,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    imageSize = constraints.maxHeight;
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        ImageSource.imgOnboard3,
-                        fit: BoxFit.cover,
-                        width: imageSize!,
-                        height: imageSize!,
-                      ),
-                    );
-                  },
-                ))
+            _buildThumnail()
           ],
         ),
       ),
     );
   }
 
+  Widget _buildThumnail() {
+    return Positioned(
+        top: 0,
+        bottom: 0,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            imageSize = constraints.maxHeight;
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                model.thumnail,
+                fit: BoxFit.cover,
+                width: imageSize!,
+                height: imageSize!,
+              ),
+            );
+          },
+        ));
+  }
+
   Widget _buildPriceAndRatingInfo(BuildContext context) {
     return Row(
       children: [
         Text(
-          '\$22.99',
+          '\$${model.price}',
           style: _priceTextStyle.copyWith(
               color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.bold),
@@ -98,7 +107,7 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
         const SizedBox(width: 16),
         const Icon(Icons.star_rounded, size: 16, color: Colors.amber),
         Text(
-          '4.2',
+          '${model.rate}',
           style: _priceTextStyle.copyWith(
               color: Colors.amber, fontWeight: FontWeight.bold),
         ),
@@ -106,7 +115,7 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
         Opacity(
             opacity: 0.5,
             child: Text(
-              '(84 review)',
+              '(${model.totalReview} review)',
               style: _priceTextStyle,
             ))
       ],

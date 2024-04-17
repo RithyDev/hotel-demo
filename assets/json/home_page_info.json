@@ -1,9 +1,70 @@
 {
   "recommented_hotels": [
     {
+      "id": "00001",
       "name": "Lé Khmer",
+      "thumbnail": "https://plus.unsplash.com/premium_photo-1682125907963-422dd79e0a38?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "address": "St 204, Boeng kok, Phone Penh Cambodia",
-      "price": 29.99
+      "images": [
+        "image-url",
+        "image-url"
+      ],
+      "price": 29.99,
+      "rate": 4.2,
+      "total_review": 84,
+      "bed": 2,
+      "hasPool": true,
+      "hasWifi": true
+    },
+    {
+      "id": "00002",
+      "name": "Angkor primé",
+      "thumbnail": "https://images.unsplash.com/photo-1704841781088-dc572472d2b9?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "address": "Siam Reab, Phone Penh Cambodia",
+      "images": [
+        "image-url",
+        "image-url"
+      ],
+      "price": 30.00,
+      "rate": 4.9,
+      "total_review": 102,
+      "bed": 3,
+      "hasPool": true,
+      "hasWifi": true
+    }
+  ],
+  "nearby": [
+    {
+      "id": "00003",
+      "name": "Lé Khmer",
+      "thumbnail": "https://media.istockphoto.com/id/1050564510/photo/3d-rendering-beautiful-luxury-bedroom-suite-in-hotel-with-tv.jpg?s=1024x1024&w=is&k=20&c=lg5tbMQ33L1s0_iYTYdWKcFbmxrKQ8A83ur1Iotlg7I=",
+      "address": "St 204, Boeng kok, Phone Penh Cambodia",
+      "images": [
+        "image-url",
+        "image-url"
+      ],
+      "price": 15,
+      "rate": 4.2,
+      "total_review": 25,
+      "bed": 1,
+      "hasPool": false,
+      "hasWifi": true
+    },
+    {
+      "id": "00004",
+      "name": "Mekong View",
+      "thumbnail": "https://media.istockphoto.com/id/1050564510/photo/3d-rendering-beautiful-luxury-bedroom-suite-in-hotel-with-tv.jpg?s=1024x1024&w=is&k=20&c=lg5tbMQ33L1s0_iYTYdWKcFbmxrKQ8A83ur1Iotlg7I=",
+      "address": "St 204, Boeng kok, Phone Penh Cambodia",
+      "images": [
+        "image-url",
+        "image-url"
+      ],
+      "price": 15.00,
+      "rate": 3.2,
+      "total_review": 25,
+      "bed": 1,
+      "hasPool": false,
+      "hasWifi": true
     }
   ]
 }

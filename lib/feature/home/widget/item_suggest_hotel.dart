@@ -1,41 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hotel_app/resource/image_resource.dart';
+import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
+import 'package:hotel_app/route/app_route.dart';
 
 class ItemSuggestedHotel extends StatefulWidget {
-  const ItemSuggestedHotel({super.key});
+  final HotelModel model;
+  final Function()? onPressed;
+  const ItemSuggestedHotel(
+      {super.key, required this.model, required this.onPressed});
 
   @override
   State<ItemSuggestedHotel> createState() => _ItemSuggestedHotelState();
 }
 
 class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
-  bool isFavoritePlace = false;
+  
+  HotelModel get model => widget.model;
+  bool get isFavoritePlace => model.isSavedFavite;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20)),
-        child: Stack(
-          children: [
-            _renderHotelPicture(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _priceInfoBuilder(context),
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: _renderFavoriteButton(),
-                )
-              ],
-            ),
-            _renderHotelInfo(context)
-          ],
+      child: GestureDetector(
+        onTap: () { goToHotelPageDetail(context); },
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20)),
+          child: Stack(
+            children: [
+              _renderHotelPicture(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _priceInfoBuilder(context),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: _renderFavoriteButton(),
+                  )
+                ],
+              ),
+              _renderHotelInfo(context)
+            ],
+          ),
         ),
       ),
     );
@@ -54,8 +63,9 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
 
     return GestureDetector(
         onTap: () {
+          model.isSavedFavite = !isFavoritePlace;
           setState(() {
-            isFavoritePlace = !isFavoritePlace;
+            // model.isSavedFavite=
           });
         },
         child: animatedChild);
@@ -74,7 +84,7 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '\$29.99',
+                '\$${model.price}',
                 style: priceTextStyle.copyWith(fontWeight: FontWeight.bold),
               ),
               Text(
@@ -92,8 +102,8 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: Image.asset(
-        ImageSource.imgOnboard1,
+      child: Image.network(
+        model.thumnail,
         fit: BoxFit.cover,
       ),
     );
@@ -127,9 +137,12 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _rowInfoBuilder(context, 'Beds', Icons.bed_outlined),
-                  _rowInfoBuilder(context, 'wifi', Icons.wifi_outlined),
-                  _rowInfoBuilder(context, 'pool', Icons.pool_outlined),
+                  _rowInfoBuilder(
+                      context, '${model.bed} Beds', Icons.bed_outlined),
+                  _rowInfoBuilder(context, 'wifi',
+                      model.hasWifi ? Icons.wifi_outlined : Icons.wifi_off),
+                  _rowInfoBuilder(context, model.hasPool ? 'pool' : 'No',
+                      Icons.pool_outlined),
                 ],
               ),
             )
@@ -154,24 +167,24 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
     );
   }
 
-  Widget _renderHotelName() => const Text(
-        'Hotel name',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+  Widget _renderHotelName() => Text(
+        model.name,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
       );
 
   Widget _renderLocationInfo() {
-    return const Opacity(
+    return Opacity(
       opacity: 0.5,
       child: Row(
         children: [
-          Icon(Icons.location_on, size: 16),
-          SizedBox(width: 6),
+          const Icon(Icons.location_on, size: 16),
+          const SizedBox(width: 6),
           Expanded(
             child: Text(
-              'location info run random text to max width is awesome',
+              model.address,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             ),
           ),
         ],
@@ -181,4 +194,9 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
 
   TextStyle get priceTextStyle =>
       const TextStyle(fontSize: 12, color: Colors.white);
+
+  void goToHotelPageDetail(BuildContext context) async {
+    await Navigator.of(context)
+        .pushNamed(RouteName.hotelPageDetail, arguments: model);
+  }
 }

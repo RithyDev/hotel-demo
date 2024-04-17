@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:hotel_app/database/model/user.dart';
 import 'package:hotel_app/database/model/user_dao.dart';
 import 'package:hotel_app/remote/model/sign_init_info.dart';

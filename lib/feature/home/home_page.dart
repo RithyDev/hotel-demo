@@ -1,42 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/home/home_viewmodel.dart';
+import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/feature/home/page_tab_behavior.dart';
 import 'package:hotel_app/feature/home/widget/home_headline.dart';
 import 'package:hotel_app/feature/home/widget/home_toolbar.dart';
 import 'package:hotel_app/feature/home/widget/item_hotel_nearby.dart';
 import 'package:hotel_app/feature/home/widget/item_suggest_hotel.dart';
+import 'package:hotel_app/model/async_data.dart';
+import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/widget/dialog_utils.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget implements TabPageBehavior {
-
+class HomePage extends StatefulWidget implements TabPageBehavior {
   const HomePage({super.key});
 
   @override
-  void onReady() {
-    
-  }
+  void onReady() {}
 
   @override
   Widget get page => this;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
+    HomeViewModel viewModel = Provider.of(context);
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _renderHeader(context),
           Expanded(
-            child: _mainScrollContainer(context),
+            child: _renderOnStateChange(context, viewModel),
           )
         ],
       ),
     );
-    
   }
 
-  Widget _mainScrollContainer(BuildContext context) {
-    
-    return CustomScrollView(
+  Widget _renderOnStateChange(BuildContext context, HomeViewModel viewModel) {
+    var state = viewModel.data;
+    return switch (state?.state) {
+      AsyncState.loading => appBlockLoading('Please wait'),
+      AsyncState.success => _mainScrollContainer(context, viewModel),
+      _ => const SizedBox()
+    };
+  }
+
+  Widget _mainScrollContainer(BuildContext context, HomeViewModel viewModel) {
+    Widget child = CustomScrollView(
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
@@ -47,22 +64,21 @@ class HomePage extends StatelessWidget implements TabPageBehavior {
             delegate: SliverChildListDelegate([
           _renderRecommendedHotelsContainer(),
         ])),
-        _renderSliverBox(
-          child: _renderSuggestedHotels(context).animate(
-            delay: const Duration(seconds: 1)
-          ).slideX(
-            begin: 1,
-            end: 0.0
-          ),
-        ),
+        _renderSliverBox(child: _renderSuggestedHotels(context, viewModel)),
         _renderSliverBox(child: _nearByHotelTitle(context)),
-        SliverList(
-            delegate: SliverChildBuilderDelegate(
-          childCount: 10,
-          (context, index) => ItemHotelNearby(),
-        ))
+        _renderNearbyHotel(context, viewModel)
       ],
     ).animate().fade();
+    return child;
+  }
+
+  SliverList _renderNearbyHotel(BuildContext context, HomeViewModel viewModel) {
+    var items = viewModel.nearBy;
+    return SliverList(
+        delegate: SliverChildBuilderDelegate(
+      childCount: items.length,
+      (context, index) => ItemHotelNearby(model: items[index]),
+    ));
   }
 
   Widget _nearByHotelTitle(BuildContext context) {
@@ -97,11 +113,11 @@ class HomePage extends StatelessWidget implements TabPageBehavior {
     );
   }
 
-  Widget _renderSuggestedHotels(BuildContext context) {
+  Widget _renderSuggestedHotels(BuildContext context, HomeViewModel viewModel) {
     double screenWidth = MediaQuery.of(context).size.width;
     double itemWith = screenWidth * 0.7;
     double itemHight = itemWith * 1.22;
-
+    var items = viewModel.recommended;
     return SizedBox(
       height: itemHight,
       child: ListView.builder(
@@ -110,11 +126,15 @@ class HomePage extends StatelessWidget implements TabPageBehavior {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
         key: const ValueKey('list_builder_suggessted_hotels'),
-        itemCount: 4,
-        itemBuilder: (context, index) =>
-            SizedBox(width: itemWith, child: const ItemSuggestedHotel()),
+        itemCount: items.length,
+        itemBuilder: (context, index) => SizedBox(
+            width: itemWith,
+            child: ItemSuggestedHotel(
+                model: items[index],
+                onPressed: () => goToHotelPageDetail(context, items[index]))),
       ),
     );
+
   }
 
   SliverToBoxAdapter _renderSliverBox({required Widget child}) =>
@@ -128,4 +148,8 @@ class HomePage extends StatelessWidget implements TabPageBehavior {
 
   TextStyle get _listHeadLineStyle =>
       const TextStyle(fontWeight: FontWeight.w600, fontSize: 16);
+
+  void goToHotelPageDetail(BuildContext context, HotelModel model) {
+    Navigator.of(context).pushNamed(RouteName.hotelPageDetail, arguments: model);
+  }
 }

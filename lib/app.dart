@@ -4,9 +4,23 @@ import 'package:hotel_app/global_state.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:provider/provider.dart';
 
-class HotelApp extends StatelessWidget {
+class HotelApp extends StatefulWidget {
   final String? intialPage;
-  const HotelApp({super.key, this.intialPage});
+  final Function(BuildContext context) onPageReady;
+
+  const HotelApp({super.key, this.intialPage, required this.onPageReady});
+
+  @override
+  State<HotelApp> createState() => _HotelAppState();
+}
+
+class _HotelAppState extends State<HotelApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    widget.onPageReady(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +43,7 @@ class HotelApp extends StatelessWidget {
         primaryColorDark: const Color.fromARGB(255, 26, 118, 194),
         useMaterial3: true,
       ),
-      initialRoute: intialPage ?? RouteName.splashScreen,
+      initialRoute: widget.intialPage ?? RouteName.splashScreen,
       routes: appRounte,
     );
   }
