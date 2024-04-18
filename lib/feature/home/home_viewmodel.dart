@@ -50,6 +50,7 @@ class HomeViewModel extends ChangeNotifier {
         bed: item.bed,
         hasPool: item.hasPool,
         hasWifi: item.hasWifi,
+        images: item.images,
         isSavedFavite: false);
   }
 

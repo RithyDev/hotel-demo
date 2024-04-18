@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 Widget appRoundedButton(BuildContext context,
-    {required String title, required VoidCallback? onPressed, Widget? child}) {
+    {required String? title, required VoidCallback? onPressed, Widget? child}) {
   final displayChild = child ??
       Text(
-        title,
+        title ?? '',
         style: const TextStyle(
             color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
       );

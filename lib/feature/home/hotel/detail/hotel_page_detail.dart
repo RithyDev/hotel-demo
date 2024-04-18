@@ -1,10 +1,17 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/home/hotel/detail/hotel_detail_header.dart';
 import 'package:hotel_app/feature/home/hotel/detail/item_common_facilities.dart';
+import 'package:hotel_app/feature/home/hotel/detail/item_hotel_location.dart';
 import 'package:hotel_app/feature/home/hotel/detail/item_hotel_overview.dart';
+import 'package:hotel_app/feature/home/hotel/detail/item_hotel_review.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
+import 'package:hotel_app/widget/app_button_styles.dart';
+import 'package:hotel_app/widget/common_widget.dart';
 
 class HotelPageDetail extends StatefulWidget {
   const HotelPageDetail({super.key});
@@ -55,13 +62,115 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   }
 
   Widget _renderMainScrollView(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [_renderAppbar(context), 
-      _renderCommonFacillitiesInfo(),
+    return Stack(
+      children: [
+        CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            _renderAppbar(context),
+            _renderCommonFacillitiesInfo(),
+            _renderOverviewContent(),
+            _renderLocationInfo(),
+            ..._reviewSessionSliverBoxs(),
+            SliverToBoxAdapter(
+              child: space(height: 120),
+            ),
+          ],
+        ),
+        _renderFooterBackground(),
+        _renderFooterView(),
+      ],
+    );
+  }
+
+  Widget _renderFooterBackground() {
+    var color = Colors.white;
+    return Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+            height: 120,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  color,
+                  color,
+                  color.withOpacity(0.4),
+                  color.withOpacity(0.0)
+                ], // White to transparent
+              ),
+            )));
+  }
+
+  Widget _renderFooterView() {
+    return Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('\$'),
+                    Text(
+                      "${model?.price}",
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )),
+                Expanded(
+                    child: appRoundedButton(context,
+                        title: null,
+                        onPressed: () {},
+                        child: Text(
+                          'Booking Now',
+                          style: TextStyle(color: Colors.white),
+                        )))
+              ],
+            ),
+          ),
+        ));
+  }
+
+  SliverToBoxAdapter _renderLocationInfo() {
+    return SliverToBoxAdapter(
+      child: LocationInfo(model: model),
+    );
+  }
+
+  List<Widget> _reviewSessionSliverBoxs() {
+    return [
       SliverToBoxAdapter(
-        child: HotelOverview(),
-      )],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Reviews'),
+              TextButton(onPressed: () {}, child: const Text('See all'))
+            ],
+          ),
+        ),
+      ),
+      SliverList(
+          delegate: SliverChildBuilderDelegate(
+              childCount: 2, (context, index) => const ItemHotelReview())),
+    ];
+  }
+
+  SliverToBoxAdapter _renderOverviewContent() {
+    return SliverToBoxAdapter(
+      child: HotelOverview(),
     );
   }
 
@@ -71,13 +180,10 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
     );
   }
 
-  
-
   Widget _renderAppbar(
     BuildContext context,
   ) {
     var size = MediaQuery.of(context).size;
-    var r = const Radius.circular(20);
     expandedHeight = size.width * 0.8;
     return SliverAppBar(
       pinned: true,
@@ -87,18 +193,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
       backgroundColor: Colors.white,
       forceMaterialTransparency: false,
       actions: [_renderToolbar(size)],
-      flexibleSpace: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(bottomLeft: r, bottomRight: r)),
-        child: FlexibleSpaceBar(
-          collapseMode: CollapseMode.pin,
-          background: Stack(
-            children: [_renderImageSliderBox(), _renderHotelNameAndAddress()],
-          ),
-        ),
-      ),
+      flexibleSpace: DetailHeaderContent(model: model),
     );
   }
 
@@ -131,8 +226,25 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
     var color = isFavorited ? Colors.red : actionColor;
     var iconData =
         isFavorited ? Icons.favorite_rounded : Icons.favorite_outline;
-    return SizedBox(
-        width: 40, height: 40, child: Icon(iconData, color: color, size: 32));
+
+    return Card(
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: InkWell(
+        splashColor: Colors.red.withOpacity(0.2),
+        onTap: () => setState(() {
+          model?.isSavedFavite = !isFavorited;
+        }),
+        child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Icon(iconData, color: color, size: 32)
+                .animate(key: ValueKey('item_favorit_$isFavorited'))
+                .scale()),
+      ),
+    );
   }
 
   Widget _renderBackButton() {
@@ -147,95 +259,6 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
             Icons.arrow_back,
             color: actionColor,
           )).animate(key: ValueKey('arrow_back_$isAppbarCollapsed')).fade(),
-    );
-  }
-
-  Widget _renderHotelNameAndAddress() {
-    return Positioned(
-        bottom: 16,
-        left: 16,
-        right: 16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _renderSlideIndicator(),
-            Text(model?.name ?? '',
-                style: _appbarTextStyle.copyWith(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(
-                  Icons.location_on,
-                  color: Colors.white,
-                ),
-                Text(model?.address ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: _appbarTextStyle.copyWith(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
-              ],
-            )
-          ],
-        ));
-  }
-
-  Widget _renderSlideIndicator() {
-    int count = 3;
-    List<int> indicator = [];
-    for (var i = 0; i < count; i++) {
-      indicator.add(i);
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: indicator.map((index) => _pageIndicator(index)).toList(),
-    );
-  }
-
-  Widget _pageIndicator(int index) {
-    var isSelected = index == selectedSliderPage;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: AnimatedContainer(
-        width: isSelected ? 24 : 6,
-        height: 6,
-        decoration: BoxDecoration(
-            color: Colors.white.withOpacity(isSelected ? 1 : 0.4),
-            borderRadius: BorderRadius.circular(6)),
-        duration: const Duration(milliseconds: 240),
-      ),
-    );
-  }
-
-  Widget _renderImageSliderBox() {
-    return SizedBox(
-      width: double.infinity,
-      child: _renderImageSlider(),
-    );
-  }
-
-  Widget _renderImageSlider() {
-    List<String> urls = [];
-    if (model != null) {
-      urls.add(model!.thumnail);
-      urls.add(model!.thumnail);
-    }
-    return PageView(
-      physics: null,
-      onPageChanged: (index) => {
-        setState(() {
-          selectedSliderPage = index;
-        })
-      },
-      children: urls.map((url) => _imageSlider(url)).toList(),
-    );
-  }
-
-  Widget _imageSlider(String url) {
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
     );
   }
 

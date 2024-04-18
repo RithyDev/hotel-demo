@@ -8,6 +8,7 @@ class HotelModel {
   final int bed;
   final bool hasPool;
   final bool hasWifi;
+  final List<String> images;
   bool isSavedFavite = false;
 
 
@@ -21,5 +22,6 @@ class HotelModel {
       required this.bed,
       required this.hasPool,
       required this.hasWifi,
+      required this.images,
       required this.isSavedFavite});
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
-
-import 'package:hotel_app/resource/image_resource.dart';
+import 'package:hotel_app/route/app_route.dart';
 
 class ItemHotelNearby extends StatefulWidget {
   final HotelModel model;
@@ -18,7 +17,8 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
 
   @override
   Widget build(BuildContext context) {
-    return _builderItem(context);
+    return GestureDetector(
+        onTap: () => _gotoPageDetial(), child: _builderItem(context));
   }
 
   Widget _builderItem(BuildContext context) {
@@ -123,4 +123,9 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
   }
 
   TextStyle get _priceTextStyle => const TextStyle(fontSize: 12);
+
+  void _gotoPageDetial() {
+    Navigator.of(context)
+        .pushNamed(RouteName.hotelPageDetail, arguments: model);
+  }
 }
