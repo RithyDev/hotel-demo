@@ -17,13 +17,8 @@ class _DetailHeaderContentState extends State<DetailHeaderContent> {
 
   @override
   Widget build(BuildContext context) {
-    var r = const Radius.circular(20);
-
     return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(bottomLeft: r, bottomRight: r)),
+      color: Colors.white,
       child: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         background: Stack(
@@ -46,14 +41,18 @@ class _DetailHeaderContentState extends State<DetailHeaderContent> {
       urls.add(model!.thumnail);
       urls.addAll(model?.images ?? []);
     }
-    return PageView(
-      physics: null,
-      onPageChanged: (index) => {
-        setState(() {
-          _pageSelected = index;
-        })
-      },
-      children: urls.map((url) => _imageSlider(url)).toList(),
+    var radius = const Radius.circular(20);
+    return ClipRRect(
+      borderRadius: BorderRadius.only(bottomRight: radius, bottomLeft: radius),
+      child: PageView(
+        physics: null,
+        onPageChanged: (index) => {
+          setState(() {
+            _pageSelected = index;
+          })
+        },
+        children: urls.map((url) => _imageSlider(url)).toList(),
+      ),
     );
   }
 

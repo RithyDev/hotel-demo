@@ -14,7 +14,7 @@ class LoginFormData {
      final value = emailOrPhone.value ?? '';
     final RegExp regex = RegExp(r'^[0-9]+$');
     final isNumber = regex.hasMatch(value);
-    return isNumber ? validatePhoneNumber(emailOrPhone) : validateEmail(emailOrPhone);
+    return isNumber ? validateFormPhoneNumber(emailOrPhone) : validateEmail(emailOrPhone);
   }
 
   bool compilePassword() => validatePassword(password);

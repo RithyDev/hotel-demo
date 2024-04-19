@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/widget/app_network_image.dart';
 
 class ItemSuggestedHotel extends StatefulWidget {
   final HotelModel model;
@@ -102,8 +103,8 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: Image.network(
-        model.thumnail,
+      child: AppNetworkImage(
+        source: model.thumnail,
         fit: BoxFit.cover,
       ),
     );
@@ -198,5 +199,7 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
   void goToHotelPageDetail(BuildContext context) async {
     await Navigator.of(context)
         .pushNamed(RouteName.hotelPageDetail, arguments: model);
+    setState(() {
+    });
   }
 }

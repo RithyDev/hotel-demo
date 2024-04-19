@@ -23,7 +23,7 @@ bool validateEmail(InputFormData<String> email) {
   return isValid;
 }
 
-bool validatePhoneNumber(InputFormData<String> phone) {
+bool validateFormPhoneNumber(InputFormData<String> phone) {
   final value = phone.value;
   if (value == null) {
     return false;

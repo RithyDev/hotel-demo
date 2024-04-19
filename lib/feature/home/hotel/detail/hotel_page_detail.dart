@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hotel_app/feature/booking/booking_page.dart';
 import 'package:hotel_app/feature/home/hotel/detail/hotel_detail_header.dart';
 import 'package:hotel_app/feature/home/hotel/detail/item_common_facilities.dart';
 import 'package:hotel_app/feature/home/hotel/detail/item_hotel_location.dart';
@@ -64,21 +65,25 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   Widget _renderMainScrollView(BuildContext context) {
     return Stack(
       children: [
-        CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            _renderAppbar(context),
-            _renderCommonFacillitiesInfo(),
-            _renderOverviewContent(),
-            _renderLocationInfo(),
-            ..._reviewSessionSliverBoxs(),
-            SliverToBoxAdapter(
-              child: space(height: 120),
-            ),
-          ],
-        ),
+        _renderMainContainer(context),
         _renderFooterBackground(),
         _renderFooterView(),
+      ],
+    );
+  }
+
+  Widget _renderMainContainer(BuildContext context) {
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        _renderAppbar(context),
+        _renderCommonFacillitiesInfo(),
+        _renderOverviewContent(),
+        _renderLocationInfo(),
+        ..._reviewSessionSliverBoxs(),
+        SliverToBoxAdapter(
+          child: space(height: 120),
+        ),
       ],
     );
   }
@@ -128,18 +133,27 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
                     ),
                   ],
                 )),
-                Expanded(
-                    child: appRoundedButton(context,
-                        title: null,
-                        onPressed: () {},
-                        child: Text(
-                          'Booking Now',
-                          style: TextStyle(color: Colors.white),
-                        )))
+                _renderBookingNowButton()
               ],
             ),
           ),
         ));
+  }
+
+  Widget _renderBookingNowButton() {
+    return Expanded(
+        child: appRoundedButton(context,
+            title: null,
+            onPressed: () => navigateToBooking(),
+            child: const Text(
+              'Booking Now',
+              style: TextStyle(color: Colors.white),
+            )));
+  }
+
+  void navigateToBooking() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => HotelBookingPage()));
   }
 
   SliverToBoxAdapter _renderLocationInfo() {
@@ -169,7 +183,8 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   }
 
   SliverToBoxAdapter _renderOverviewContent() {
-    return SliverToBoxAdapter(
+    return const SliverToBoxAdapter(
+      key: ValueKey('section_overview'),
       child: HotelOverview(),
     );
   }
@@ -249,6 +264,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
 
   Widget _renderBackButton() {
     return GestureDetector(
+      onTap: () => Navigator.of(context).pop(),
       child: Container(
           width: 40,
           height: 40,

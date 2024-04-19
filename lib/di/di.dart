@@ -19,10 +19,10 @@ void setupDIOnAppReady(BuildContext globalContext) {
   var homeRepo = HomeRepository(jsonReader: jsonReader);
   getIt.registerSingleton(jsonReader);
   getIt.registerFactory(() => homeRepo);
-  
 }
 
 void appModule() {
-  getIt.registerSingleton(
-      GlobalState(isDarkMode: false, primaryColor: Colors.blue));
+  getIt.registerSingleton(GlobalState(
+      isDarkMode: false,
+      primaryColor: Colors.blue));
 }

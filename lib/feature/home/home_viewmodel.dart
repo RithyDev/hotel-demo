@@ -10,6 +10,9 @@ class HomeViewModel extends ChangeNotifier {
   AsyncData<HomeInfoData>? _data;
   AsyncData<HomeInfoData>? get data => _data;
 
+  List<HotelModel>? _recommendedHotels;
+  List<HotelModel>? _nearbyHotels;
+
   HomeViewModel({required this.homeRepo}) {
     loadData();
   }
@@ -26,18 +29,24 @@ class HomeViewModel extends ChangeNotifier {
 
   void setDataState(AsyncData<HomeInfoData> newState) {
     _data = newState;
+    _nearbyHotels = _nearBy;
+    _recommendedHotels = _recommended;
     notifyListeners();
   }
 
-  List<HotelModel> get nearBy {
+  List<HotelModel> get _nearBy {
     var items = data?.data?.nearby.map((item) => mapFrom(item)).toList();
     return items ?? [];
   }
 
-  List<HotelModel> get recommended {
+  List<HotelModel> get nearBy => _nearbyHotels ?? [];
+
+  List<HotelModel> get _recommended {
     var items = data?.data?.recommended.map((item) => mapFrom(item)).toList();
     return items ?? [];
   }
+
+  List<HotelModel> get recommended => _recommendedHotels ?? [];
 
   HotelModel mapFrom(HotelInfo item) {
     return HotelModel(

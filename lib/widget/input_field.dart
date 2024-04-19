@@ -13,6 +13,9 @@ class AppInputField extends StatefulWidget {
   final Widget? iconOnFocused;
   final Widget? subfixIcon;
   final double? borderRounded;
+  final Color? backgroundColor;
+  final Color? backgroundColorOnEmptyness;
+  final TextInputType? keyboardType;
 
   const AppInputField(
       {super.key,
@@ -23,6 +26,9 @@ class AppInputField extends StatefulWidget {
       this.errorMessage,
       this.obscureText,
       this.icon,
+      this.backgroundColor,
+      this.backgroundColorOnEmptyness,
+      this.keyboardType,
       this.iconOnFocused, this.subfixIcon, this.borderRounded});
 
   @override
@@ -91,13 +97,19 @@ class _AppInputFieldState extends State<AppInputField> {
   }
 
   Widget _renderInputBox(BuildContext context) {
-    return SizedBox(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 240),
+      decoration: BoxDecoration(
+        color:  (hasFocused || hasText)? widget.backgroundColor : widget.backgroundColorOnEmptyness,
+        borderRadius: BorderRadius.circular(widget.borderRounded ?? 0)
+      ),
       height: 64,
       child: TextField(
           maxLines: 1,
           focusNode: _focusNode,
           onChanged: (value) => invokeOnChange(value),
           obscureText: showInputObscureText,
+          keyboardType: widget.keyboardType,
           decoration: outlineInputField(
             context,
             borderRouned: widget.borderRounded,

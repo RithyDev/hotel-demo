@@ -9,7 +9,9 @@ TextStyle get submitButtonTextStyle =>
 InputBorder inputOutlineBorder(BuildContext context,
         {Color? borderColor, double? borderRounded}) =>
     OutlineInputBorder(
+        
         borderRadius: BorderRadius.all(Radius.circular(borderRounded ?? 12)),
+        
         borderSide:
             BorderSide(color: borderColor ?? Colors.grey.withOpacity(0.2)));
 
@@ -22,7 +24,7 @@ InputDecoration outlineInputField(BuildContext context,
   final focusedBorder = (isError ? Colors.red : Colors.blue).withOpacity(0.2);
   return InputDecoration(
       prefixIcon: icon,
-      suffixIcon: suffixIcon,
+      suffixIcon: suffixIcon,      
       enabledBorder: inputOutlineBorder(context,
           borderColor: enabledColor, borderRounded: borderRouned),
       focusedBorder: inputOutlineBorder(context,
