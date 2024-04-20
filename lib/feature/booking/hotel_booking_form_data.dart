@@ -4,7 +4,7 @@ import 'package:hotel_app/utils/form_validator.dart';
 
 class HotelBookingFormData {
 
-  InputFormData<DateTimeRange> dates = InputFormData(null);
+  InputFormData<DateTimeRange> bookingDateRange = InputFormData(null);
   InputFormData<String> phoneNumber = InputFormData(null);
 
   bool isValid() {

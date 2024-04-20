@@ -1,9 +1,11 @@
-import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/booking/hotel_booking_viewmodel.dart';
+import 'package:hotel_app/feature/booking/widget/room_and_guests.dart';
+import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_checkbox.dart';
 import 'package:hotel_app/widget/app_date_range_picker.dart';
 import 'package:hotel_app/widget/common_widget.dart';
+import 'package:hotel_app/widget/date_time_utils.dart';
 import 'package:hotel_app/widget/drop_down_selector.dart';
 import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
@@ -39,10 +41,25 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
 
   Widget _renderMainContent(BuildContext context) {
     return Consumer<HotelBookingViewModel>(
-        builder: (context, value, child) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [_renderToolbar(), _renderInputsForm()],
+        builder: (context, value, child) => Stack(
+              children: [_renderRootWidget(), _renderContinueButton(context)],
             ));
+  }
+
+  Widget _renderContinueButton(BuildContext context) {
+    return Positioned(
+      bottom: 16,
+      left: 24,
+      right: 24,
+      child: appRoundedButton(context, onPressed: () => {}, title: 'Continues'),
+    );
+  }
+
+  Column _renderRootWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [_renderToolbar(), _renderInputsForm()],
+    );
   }
 
   Widget _renderInputsForm() {
@@ -111,6 +128,7 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
         leadingIcon:
             const Icon(Icons.calendar_month_outlined, color: Colors.grey),
         label: 'Dates',
+        value: viewModel.dateRange.value?.formatToString(),
         onPressed: () => _showDateRangePicker(),
         placeholder: 'Select date');
   }
@@ -120,7 +138,7 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
       leadingIcon:
           const Icon(Icons.person_outline_outlined, color: Colors.grey),
       label: 'Guests',
-      onPressed: () => {},
+      onPressed: () => _editRoomAndGuest(),
       placeholder: 'Select number of guest',
     );
   }
@@ -141,9 +159,14 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
       hint: 'Phon Number',
       keyboardType: TextInputType.number,
       backgroundColorOnEmptyness: Colors.grey.withOpacity(0.04),
-      icon: const Icon(
-        Icons.phone_outlined,
-        color: Colors.grey,
+      hintStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+      placeholderStyle: const TextStyle(fontSize: 14),
+      icon: const Padding(
+        padding: EdgeInsets.only(left: 20, right: 14),
+        child: Icon(
+          Icons.phone_outlined,
+          color: Colors.grey,
+        ),
       ),
       errorMessage: viewModel.phoneNumber.errorMessage,
       onChanged: (value) => viewModel.setPhoneNumber(value),
@@ -169,10 +192,10 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
 
   Future<void> _showDateRangePicker() async {
     final initialDate = DateTime.now();
-    final firstDate = DateTime(initialDate.year - 1);
+    final firstDate = initialDate;
     final lastDate = DateTime(initialDate.year + 1);
 
-    var maxWidth = MediaQuery.of(context).size.width * 0.8;
+    var maxWidth = MediaQuery.of(context).size.width * 1;
     final pickedDateRange = await showDialog(
       context: context,
       builder: (context) {
@@ -182,6 +205,7 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
             child: AppDateRangePicker(
               firstDate: firstDate,
               lastDate: lastDate,
+              initialDateSelected: viewModel.dateRange.value,
             ),
           ),
         );
@@ -189,8 +213,15 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
     );
 
     // Handle pickedDateRange here
-    if (pickedDateRange != null) {
-      print('Picked date range: $pickedDateRange');
+    if (pickedDateRange != null && pickedDateRange is DateTimeRange) {
+      viewModel.setBookingDates(pickedDateRange);
     }
+  }
+
+  Future<void> _editRoomAndGuest() async {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => RoomAndGuestController());
   }
 }

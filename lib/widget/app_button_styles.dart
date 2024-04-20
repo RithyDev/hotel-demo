@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget appRoundedButton(BuildContext context,
-    {required String? title, required VoidCallback? onPressed, Widget? child}) {
+    {String? title, required VoidCallback? onPressed, Widget? child}) {
   final displayChild = child ??
       Text(
         title ?? '',

@@ -7,10 +7,16 @@ class HotelBookingViewModel extends ChangeNotifier {
   final HotelBookingFormData _formData = HotelBookingFormData();
 
   InputFormData<String> get phoneNumber => _formData.phoneNumber;
+  InputFormData<DateTimeRange> get dateRange => _formData.bookingDateRange;
 
   void setPhoneNumber(String value) {
     phoneNumber.value =value;
     _formData.compileErrorForPhoneNumber();
+    notifyListeners();
+  }
+
+  void setBookingDates(DateTimeRange range) {
+    dateRange.value = range;
     notifyListeners();
   }
    

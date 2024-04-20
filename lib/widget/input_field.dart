@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
+import 'package:hotel_app/widget/common_widget.dart';
 import 'package:hotel_app/widget/styles.dart';
 
 class AppInputField extends StatefulWidget {
   final String? hint;
+  final TextStyle? hintStyle;
   final String? placeholder;
   final ValueChanged<String>? onChanged;
   final int? maxLines;
@@ -16,6 +18,7 @@ class AppInputField extends StatefulWidget {
   final Color? backgroundColor;
   final Color? backgroundColorOnEmptyness;
   final TextInputType? keyboardType;
+  final TextStyle? placeholderStyle;
 
   const AppInputField(
       {super.key,
@@ -29,7 +32,11 @@ class AppInputField extends StatefulWidget {
       this.backgroundColor,
       this.backgroundColorOnEmptyness,
       this.keyboardType,
-      this.iconOnFocused, this.subfixIcon, this.borderRounded});
+      this.placeholderStyle,
+      this.hintStyle,
+      this.iconOnFocused,
+      this.subfixIcon,
+      this.borderRounded});
 
   @override
   State<AppInputField> createState() => _AppInputFieldState();
@@ -67,7 +74,12 @@ class _AppInputFieldState extends State<AppInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        widget.hint != null ? Text(widget.hint ?? '') : const SizedBox(),
+        widget.hint != null
+            ? Text(
+                widget.hint ?? '',
+                style: widget.hintStyle,
+              )
+            : const SizedBox(),
         const SizedBox(height: 8),
         _renderInputBox(context),
         _renderErrorMessage(context)
@@ -100,9 +112,10 @@ class _AppInputFieldState extends State<AppInputField> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       decoration: BoxDecoration(
-        color:  (hasFocused || hasText)? widget.backgroundColor : widget.backgroundColorOnEmptyness,
-        borderRadius: BorderRadius.circular(widget.borderRounded ?? 0)
-      ),
+          color: (hasFocused || hasText)
+              ? widget.backgroundColor
+              : widget.backgroundColorOnEmptyness,
+          borderRadius: BorderRadius.circular(widget.borderRounded ?? 0)),
       height: 64,
       child: TextField(
           maxLines: 1,
@@ -118,7 +131,9 @@ class _AppInputFieldState extends State<AppInputField> {
                 ? (widget.iconOnFocused ?? widget.icon)
                 : widget.icon,
             suffixIcon: widget.subfixIcon ?? _renderObscureTextToggle(),
-          ).copyWith(hintText: widget.placeholder)),
+          ).copyWith(
+              hintText: widget.placeholder,
+              hintStyle: widget.placeholderStyle)),
     );
   }
 
