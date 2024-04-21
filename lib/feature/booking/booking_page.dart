@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/booking/hotel_booking_viewmodel.dart';
+import 'package:hotel_app/feature/booking/model/room_info.dart';
+import 'package:hotel_app/feature/booking/model/room_model.dart';
 import 'package:hotel_app/feature/booking/widget/room_and_guests.dart';
+import 'package:hotel_app/feature/booking/widget/room_type_selector.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_checkbox.dart';
 import 'package:hotel_app/widget/app_date_range_picker.dart';
@@ -134,22 +137,29 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
   }
 
   Widget _renderSelectGuests() {
+    var guestInfo = viewModel.guestInfo.value;
     return DropDownSelector(
       leadingIcon:
           const Icon(Icons.person_outline_outlined, color: Colors.grey),
       label: 'Guests',
+      value: guestInfo != null ? formatGuestInfo(guestInfo) : null,
       onPressed: () => _editRoomAndGuest(),
       placeholder: 'Select number of guest',
     );
+  }
+
+  String formatGuestInfo(BookingRoomInfo info) {
+    return '${info.room} room, ${info.adults} adults & ${info.children} children.';
   }
 
   Widget _renderSelectRoomType() {
     return DropDownSelector(
       leadingIcon: const Icon(Icons.home_work_outlined, color: Colors.grey),
       label: 'Room Type',
-      onPressed: () => {},
+      onPressed: () => _selectRoomType(),
+      value: viewModel.roomType.value?.title,
       placeholder: 'Select room type',
-    );
+    ); 
   }
 
   Widget _renderInputPhoneNumber() {
@@ -219,9 +229,23 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
   }
 
   Future<void> _editRoomAndGuest() async {
-    showModalBottomSheet(
+    BookingRoomInfo? initialValue = viewModel.guestInfo.value;
+    var result = await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
-        builder: (context) => RoomAndGuestController());
+        builder: (context) =>
+            RoomAndGuestController(initialInfo: initialValue));
+    if (result is BookingRoomInfo) {
+      viewModel.setGuestsInfo(result);
+    }
+  }
+
+  Future<void> _selectRoomType() async {
+    var result = await showModalBottomSheet(
+        context: context,
+        builder: (context) => RoomTypeSelector(roomTypes: viewModel.roomTypes));
+    if (result != null && result is RoomModel) {
+      viewModel.setRoomType(result);
+    }
   }
 }

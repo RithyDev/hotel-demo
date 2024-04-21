@@ -1,8 +1,4 @@
-import 'dart:collection';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/booking/booking_page.dart';
 import 'package:hotel_app/feature/home/hotel/detail/hotel_detail_header.dart';

@@ -54,7 +54,7 @@ class DropDownSelector extends StatelessWidget {
   Widget _renderInputBox(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Colors.grey.withOpacity(0.04),
+      color: value != null? Colors.transparent : Colors.grey.withOpacity(0.04),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
