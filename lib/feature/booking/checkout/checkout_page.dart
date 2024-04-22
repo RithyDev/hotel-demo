@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hotel_app/feature/booking/checkout/checkout_viewmodel.dart';
+import 'package:hotel_app/feature/booking/checkout/promo_code_selector.dart';
 import 'package:hotel_app/feature/booking/model/booking_info.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/feature/home/widget/item_hotel_nearby.dart';
@@ -9,6 +11,7 @@ import 'package:hotel_app/widget/app_toolbar.dart';
 import 'package:hotel_app/widget/common_widget.dart';
 import 'package:hotel_app/widget/dash_line_divider.dart';
 import 'package:hotel_app/widget/date_time_utils.dart';
+import 'package:provider/provider.dart';
 
 class CheckoutRoomPage extends StatefulWidget {
   final HotelModel? hotelInfo;
@@ -20,14 +23,28 @@ class CheckoutRoomPage extends StatefulWidget {
 }
 
 class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
+  late CheckoutViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = CheckoutViewModel();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    var content = Scaffold(
       body: SafeArea(
         child: Column(
           children: [_renderToolbar(), _renderMainContainer()],
         ),
       ),
+    );
+
+    return ChangeNotifierProvider(
+      create: (context) => viewModel,
+      child: Consumer<CheckoutViewModel>(
+          builder: (context, value, child) => content),
     );
   }
 
@@ -118,37 +135,45 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
             const Text('Promo',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             space(height: 6),
-            Card(
-              elevation: 0,
-              color: Colors.grey.withOpacity(0.1),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(18),
-                        child: SvgPicture.asset(
-                          ImageSource.icPromoCode,
-                          width: 22,
-                          height: 22,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        'Select',
-                        style: TextStyle(color: Colors.grey.withOpacity(0.8)),
-                      ),
-                    ],
+            _renderPromoCodeButton()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _renderPromoCodeButton() {
+    return Card(
+      elevation: 0,
+      color: Colors.grey.withOpacity(0.1),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: _selectPromoCode,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: SvgPicture.asset(
+                    ImageSource.icPromoCode,
+                    width: 22,
+                    height: 22,
+                    color: Colors.grey,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.keyboard_arrow_right_rounded,
-                        color: Colors.grey),
-                  ),
-                ],
-              ),
-            )
+                ),
+                Text(
+                  'Select',
+                  style: TextStyle(color: Colors.grey.withOpacity(0.8)),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child:
+                  Icon(Icons.keyboard_arrow_right_rounded, color: Colors.grey),
+            ),
           ],
         ),
       ),
@@ -260,5 +285,12 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _selectPromoCode() async {
+    await showModalBottomSheet(
+        context: context,
+        builder: (context) =>
+            PromoCodeSelectorPage(promoCodes: viewModel.promoCodes));
   }
 }
