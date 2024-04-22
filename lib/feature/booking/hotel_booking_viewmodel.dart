@@ -38,5 +38,7 @@ class HotelBookingViewModel extends ChangeNotifier {
     RoomModel(roomId: '00001', title: 'Queen Room', subtitle: 'A room with a queen-size. May be acc..'),
     RoomModel(roomId: '00002', title: 'King Room', subtitle: 'A room with a king-size. May be acc..')
   ];
+
+  bool get shouldEnabledButton => _formData.isValid();
    
 }

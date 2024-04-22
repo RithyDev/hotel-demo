@@ -5,7 +5,6 @@ import 'package:hotel_app/model/input_form_data.dart';
 import 'package:hotel_app/utils/form_validator.dart';
 
 class HotelBookingFormData {
-
   InputFormData<DateTimeRange> bookingDateRange = InputFormData(null);
   InputFormData<String> phoneNumber = InputFormData(null);
   InputFormData<BookingRoomInfo> guestInfo = InputFormData(null);
@@ -15,5 +14,9 @@ class HotelBookingFormData {
     return compileErrorForPhoneNumber();
   }
 
-  bool compileErrorForPhoneNumber() => validateFormPhoneNumber(phoneNumber);
-} 
+  bool compileErrorForPhoneNumber() =>
+      validateFormPhoneNumber(phoneNumber) &&
+      bookingDateRange.value != null &&
+      guestInfo.value != null &&
+      roomType.value != null;
+}

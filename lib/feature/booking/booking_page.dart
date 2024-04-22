@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_app/feature/booking/checkout/checkout_page.dart';
 import 'package:hotel_app/feature/booking/hotel_booking_viewmodel.dart';
+import 'package:hotel_app/feature/booking/model/booking_info.dart';
 import 'package:hotel_app/feature/booking/model/room_info.dart';
 import 'package:hotel_app/feature/booking/model/room_model.dart';
 import 'package:hotel_app/feature/booking/widget/room_and_guests.dart';
 import 'package:hotel_app/feature/booking/widget/room_type_selector.dart';
+import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_checkbox.dart';
 import 'package:hotel_app/widget/app_date_range_picker.dart';
@@ -14,7 +17,8 @@ import 'package:hotel_app/widget/input_field.dart';
 import 'package:provider/provider.dart';
 
 class HotelBookingPage extends StatefulWidget {
-  const HotelBookingPage({super.key});
+  final HotelModel hotel;
+  const HotelBookingPage({super.key, required this.hotel});
 
   @override
   State<HotelBookingPage> createState() => _HotelBookingPageState();
@@ -50,11 +54,13 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
   }
 
   Widget _renderContinueButton(BuildContext context) {
+    VoidCallback? onPressed = viewModel.shouldEnabledButton ? _checkout : null;
     return Positioned(
       bottom: 16,
       left: 24,
       right: 24,
-      child: appRoundedButton(context, onPressed: () => {}, title: 'Continues'),
+      child:
+          appRoundedButton(context, onPressed: onPressed, title: 'Continues'),
     );
   }
 
@@ -159,7 +165,7 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
       onPressed: () => _selectRoomType(),
       value: viewModel.roomType.value?.title,
       placeholder: 'Select room type',
-    ); 
+    );
   }
 
   Widget _renderInputPhoneNumber() {
@@ -247,5 +253,29 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
     if (result != null && result is RoomModel) {
       viewModel.setRoomType(result);
     }
+  }
+
+  void _checkout() {
+    String guestInfo = viewModel.guestInfo.value?.getShortFormat() ?? '';
+    String roomType = viewModel.roomType.value?.title ?? '';
+    String phone = viewModel.phoneNumber.value ?? '';
+    Map<String, String> priceDetails = {
+      "Price": '\$139.00',
+      'Admin fee': '\$2.00',
+      'Total price': '\$141.50'
+    };
+
+    var detailInfo = BookingInfo(
+        date: viewModel.dateRange.value!,
+        guestInfo: guestInfo,
+        roomType: roomType,
+        phone: phone,
+        priceDetails: priceDetails);
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CheckoutRoomPage(
+              hotelInfo: widget.hotel,
+              info: detailInfo,
+            )));
   }
 }

@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 
 extension DateTimeRangeUtils on DateTimeRange {
   String formatToString() {
+    if (start == end) {
+      return start.shortenFormat();
+    }
     return "${start.shortenFormat()} to ${end.shortenFormat()}";
   }
 }

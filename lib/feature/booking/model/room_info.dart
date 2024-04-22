@@ -28,4 +28,8 @@ class BookingRoomInfo {
   void decreaseChildren() {
     children --;
   }
+
+  String getShortFormat() {
+    return '${adults + children} Guests ($room Room)';
+  }
 }

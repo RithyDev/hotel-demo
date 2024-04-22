@@ -148,8 +148,9 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   }
 
   void navigateToBooking() {
+    
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HotelBookingPage()));
+        .push(MaterialPageRoute(builder: (context) => HotelBookingPage(hotel: model!,)));
   }
 
   SliverToBoxAdapter _renderLocationInfo() {
