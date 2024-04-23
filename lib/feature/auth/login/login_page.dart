@@ -3,9 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/core/observable.dart';
 import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
 import 'package:hotel_app/feature/home/home_page.dart';
+import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/resource/image_resource.dart';
-import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void navigateToHomeAndResetRounte() {
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
         (route) => false);
   }
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:hotel_app/app_state.dart';
 import 'package:hotel_app/global_state.dart';
 import 'package:hotel_app/route/app_route.dart';
@@ -20,6 +23,9 @@ class _HotelAppState extends State<HotelApp> {
   void initState() {
     super.initState();
     widget.onPageReady(context);
+    if (Platform.isAndroid) {
+      FlutterDisplayMode.setHighRefreshRate();
+    }
   }
 
   @override

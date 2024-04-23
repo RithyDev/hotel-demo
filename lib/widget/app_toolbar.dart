@@ -20,7 +20,7 @@ class AppToolbar extends StatelessWidget {
             children: [
               (enabledBackPressed ?? true)
                   ? _renderBackButton(context)
-                  : space(),
+                  : space(width: 42),
               _renderTextTitle(),
               space(width: 42)
             ],

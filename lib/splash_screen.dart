@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/home/main_page.dart';
+import 'package:hotel_app/feature/onboard/onboard_page.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -21,7 +22,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void navigateNext() {
-    Widget page = const MainPage();
+    Widget page = const OnboardPage();
     final route = PageRouteBuilder(
         pageBuilder: (_, __, ___) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
