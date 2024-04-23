@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_app/app_state.dart';
-import 'package:hotel_app/feature/booking/hotel_booking_viewmodel.dart';
 import 'package:hotel_app/global_state.dart';
 import 'package:hotel_app/route/app_route.dart';
 import 'package:provider/provider.dart';

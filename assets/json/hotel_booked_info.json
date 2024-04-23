@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "id": "0001",
+      "checkinDate": "10/04/2024",
+      "checkoutDate": "20/04/2024",
+      "hotel": {
+        "id": "00004",
+        "name": "Mekong View",
+        "thumbnail": "https://images.pexels.com/photos/18602990/pexels-photo-18602990/free-photo-of-holiday-resort-with-pool-in-holiday-resort.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "address": "St 204, Boeng kok, Phone Penh Cambodia",
+        "images": [
+          "https://images.pexels.com/photos/3225531/pexels-photo-3225531.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/4577191/pexels-photo-4577191.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        ],
+        "price": 15.00,
+        "rate": 3.2,
+        "total_review": 25,
+        "bed": 1,
+        "hasPool": false,
+        "hasWifi": true
+      }
+    },
+    {
+      "id": "0002",
+      "checkinDate": "21/04/2024",
+      "checkoutDate": "22/04/2024",
+      "hotel": {
+        "id": "00003",
+        "name": "Lé Khmer",
+        "thumbnail": "https://images.pexels.com/photos/13397275/pexels-photo-13397275.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "address": "St 204, Boeng kok, Phone Penh Cambodia",
+        "images": [
+          "https://images.pexels.com/photos/2373201/pexels-photo-2373201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          "https://images.pexels.com/photos/3155666/pexels-photo-3155666.jpeg?auto=compress&cs=tinysrgb&w=600"
+        ],
+        "price": 15,
+        "rate": 4.2,
+        "total_review": 25,
+        "bed": 1,
+        "hasPool": false,
+        "hasWifi": true
+      }
+    }
+  ]   
+}

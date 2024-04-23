@@ -29,7 +29,7 @@ class ItemPromoCode extends StatelessWidget {
             duration: const Duration(milliseconds: 240),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-                border: Border.all(width: 1, color: selectedColor),
+                border: Border.all(width: isSelected? 2 : 1, color: selectedColor),
                 borderRadius: BorderRadius.circular(18)),
             child: Row(
               children: [

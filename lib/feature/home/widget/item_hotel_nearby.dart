@@ -3,8 +3,11 @@ import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/route/app_route.dart';
 
 class ItemHotelNearby extends StatefulWidget {
+  final bool? autoEnabledPressed;
+  final Color? backgroundColor;
   final HotelModel model;
-  const ItemHotelNearby({super.key, required this.model});
+  const ItemHotelNearby(
+      {super.key, required this.model, this.autoEnabledPressed, this.backgroundColor});
 
   @override
   State<ItemHotelNearby> createState() => _ItemHotelNearbyState();
@@ -17,8 +20,12 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => _gotoPageDetial(), child: _builderItem(context));
+    VoidCallback? onPressed = widget.autoEnabledPressed ?? true
+        ? () {
+            _gotoPageDetial();
+          }
+        : null;
+    return GestureDetector(onTap: onPressed, child: _builderItem(context));
   }
 
   Widget _builderItem(BuildContext context) {
@@ -31,10 +38,10 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 0),
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.04),
+            color: widget.backgroundColor?? Theme.of(context).primaryColor.withOpacity(0.04),
             borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.all(12),
         child: Stack(

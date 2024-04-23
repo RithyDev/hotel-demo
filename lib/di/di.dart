@@ -4,6 +4,7 @@ import 'package:hotel_app/core/assets_json_reader.dart';
 import 'package:hotel_app/global_state.dart';
 import 'package:hotel_app/remote/service/di.dart';
 import 'package:hotel_app/repository/di.dart';
+import 'package:hotel_app/repository/history_repository.dart';
 import 'package:hotel_app/repository/home_repository.dart';
 
 GetIt getIt = GetIt.instance;
@@ -17,8 +18,10 @@ void setupDependeciesInjection() {
 void setupDIOnAppReady(BuildContext globalContext) {
   var jsonReader = JsonAssetReader(globalContext);
   var homeRepo = HomeRepository(jsonReader: jsonReader);
+  
   getIt.registerSingleton(jsonReader);
   getIt.registerFactory(() => homeRepo);
+  getIt.registerFactory(() => HistoryRepository(jsonReader: jsonReader));
 }
 
 void appModule() {

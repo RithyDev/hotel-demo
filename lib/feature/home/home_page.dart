@@ -77,7 +77,10 @@ class _HomePageState extends State<HomePage> {
     return SliverList(
         delegate: SliverChildBuilderDelegate(
       childCount: items.length,
-      (context, index) => ItemHotelNearby(model: items[index]),
+      (context, index) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: ItemHotelNearby(model: items[index]),
+      ),
     ));
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_app/feature/booking/history/my_booking_page.dart';
 import 'package:hotel_app/feature/home/home_page.dart';
 import 'package:hotel_app/feature/home/main_bottom_navigation.dart';
 
@@ -13,7 +14,7 @@ class _MainPageState extends State<MainPage> {
   int selectedTap = 0;
   final _pages = [
     const HomePage(),
-    const Scaffold(backgroundColor: Colors.red),
+    const MyBookingPage(),
     const Scaffold(backgroundColor: Colors.blue),
     const Scaffold(backgroundColor: Colors.yellow)
   ];

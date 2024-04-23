@@ -7,6 +7,11 @@ import 'package:hotel_app/route/app_route.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // if (Platform.isAndroid) {
+  //   await FlutterDisplayMode.setHighRefreshRate();
+  // }
+  
+
   runLocalDatabase();
   setupDependeciesInjection();
   await runWrapper();
