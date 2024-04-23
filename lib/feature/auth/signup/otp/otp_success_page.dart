@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/home/home_page.dart';
+import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 
 class SuccessOtpSignUpPage extends StatelessWidget {
@@ -29,7 +30,7 @@ class SuccessOtpSignUpPage extends StatelessWidget {
 
   void goToHomePage(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
         (route) => false);
   }
 
