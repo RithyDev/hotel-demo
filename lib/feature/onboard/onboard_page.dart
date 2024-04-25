@@ -1,7 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/onboard/onboard_page_info.dart';
-import 'package:hotel_app/route/app_route.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 
 class OnboardPage extends StatefulWidget {
@@ -95,7 +95,7 @@ class _OnboardPageState extends State<OnboardPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       child: TextButton(
-          onPressed: () => Navigator.pushNamed(context, RouteName.loginPage),
+          onPressed: () =>_signInClick(),
           child: Text(
             'Already have an Account',
             style: TextStyle(color: Theme.of(context).primaryColor),
@@ -155,10 +155,21 @@ class _OnboardPageState extends State<OnboardPage> {
   }
 
   void navigateToSignUp() {
-    Navigator.of(context).pushNamed(RouteName.signUpPage);
+    context.router.pushNamed('/signup');   
   }
 
-  void handleOnClick() {
-    Navigator.pushNamed(context, RouteName.homePage);
+  void _signInClick() {
+    context.router.pushNamed('/signin');
+  }
+}
+
+
+@RoutePage()
+class OnboardScreen extends StatelessWidget {
+  const OnboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const OnboardPage();
   }
 }

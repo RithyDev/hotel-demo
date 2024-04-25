@@ -115,7 +115,10 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
     return SliverToBoxAdapter(
         child: Padding(
       padding: const EdgeInsets.only(top: 16),
-      child: (model != null ? ItemHotelNearby(model: model) : space()),
+      child: (model != null ? Padding(
+        padding: const EdgeInsets.all(16),
+        child: ItemHotelNearby(model: model),
+      ) : space()),
     ));
   }
 

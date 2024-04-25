@@ -1,8 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hotel_app/core/observable.dart';
 import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
-import 'package:hotel_app/feature/home/home_page.dart';
 import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/resource/image_resource.dart';
@@ -225,5 +225,15 @@ class _LoginPageState extends State<LoginPage> {
       const AppOutlinedButton(
           title: 'Sign In with Facebook', icon: Icon(Icons.facebook, size: 32))
     ];
+  }
+}
+
+@RoutePage()
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const LoginPage();
   }
 }
