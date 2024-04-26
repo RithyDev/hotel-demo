@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/booking/history/my_booking_page.dart';
 import 'package:hotel_app/feature/home/home_page.dart';
@@ -43,5 +44,16 @@ class _MainPageState extends State<MainPage> {
 
   Widget _renderMainContent(BuildContext context) {
     return Expanded(child: IndexedStack(index: selectedTap, children: _pages));
+  }
+}
+
+
+@RoutePage()
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MainPage();
   }
 }

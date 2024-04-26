@@ -24,7 +24,7 @@ final Map<String, WidgetBuilder> appRounte = {
   RouteName.loginPage: (context) => const LoginPage(),
   RouteName.signUpPage: (context) => const SignUpPage(),
   RouteName.hotelPageDetail: (context) => const HotelPageDetail(),
-  RouteName.signUpOtpPage:(context) => const SignUpConfirmOtpPage()
+  // RouteName.signUpOtpPage:(context) => const SignUpConfirmOtpPage()
 };
 
 Widget getPageByNamed(String rounteName) {

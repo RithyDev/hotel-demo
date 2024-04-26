@@ -1,7 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/feature/onboard/onboard_page.dart';
+import 'package:hotel_app/route/auto_route.gr.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -22,13 +23,14 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void navigateNext() {
-    Widget page = const OnboardPage();
-    final route = PageRouteBuilder(
-        pageBuilder: (_, __, ___) => page,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(opacity: animation, child: child),
-        transitionDuration: const Duration(milliseconds: 400));
-    Navigator.of(context).pushReplacement(route);
+    // Widget page = const OnboardPage();
+    // final route = PageRouteBuilder(
+    //     pageBuilder: (_, __, ___) => page,
+    //     transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+    //         FadeTransition(opacity: animation, child: child),
+    //     transitionDuration: const Duration(milliseconds: 400));
+    // Navigator.of(context).pushReplacement(route);
+    context.router.pushAndPopUntil(const MainRoute(), predicate: (route) => false);
   }
 
   @override
@@ -98,4 +100,15 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   TextStyle get titleStyle =>
       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
+}
+
+
+@RoutePage()
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SplashScreenPage();
+  }
 }

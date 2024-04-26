@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hotel_app/feature/home/home_page.dart';
+import 'package:hotel_app/feature/auth/signup/otp/sign_up_confitm_otp.dart';
 import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 
@@ -29,9 +31,10 @@ class SuccessOtpSignUpPage extends StatelessWidget {
   }
 
   void goToHomePage(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainPage()),
-        (route) => false);
+    // Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => const MainPage()),
+    //     (route) => false);
+    // context.router.pushAndPopUntil( , predicate: (route) => false);
   }
 
   Widget _renderSuccessText() {
@@ -93,6 +96,23 @@ class SuccessOtpSignUpPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: color, borderRadius: BorderRadius.circular(size / 2)),
+    );
+  }
+}
+
+@RoutePage()
+class SignUpOtpScreen extends StatelessWidget {
+  final String destination;
+  final String ref;
+  final String? otp;
+  const SignUpOtpScreen({super.key, required this.destination, required this.ref, this.otp});
+
+  @override
+  Widget build(BuildContext context) {
+    return SignUpConfirmOtpPage(
+      destination: destination,
+      ref: ref,
+      otp: otp,
     );
   }
 }

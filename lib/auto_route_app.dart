@@ -1,11 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:hotel_app/app_state.dart';
 import 'package:hotel_app/global_state.dart';
 import 'package:hotel_app/route/auto_route.dart';
 import 'package:provider/provider.dart';
 
 class AutoRouteApp extends StatefulWidget {
-  const AutoRouteApp({super.key});
+  
+  const AutoRouteApp({super.key, required this.onPageReady});
+  final Function(BuildContext context) onPageReady;
 
   @override
   State<AutoRouteApp> createState() => _AutoRouteAppState();
@@ -13,6 +19,18 @@ class AutoRouteApp extends StatefulWidget {
 
 class _AutoRouteAppState extends State<AutoRouteApp> {
   final _appRouter = AppRouter();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.onPageReady(context);
+    if (kIsWeb) {
+      return;
+    }
+    if (Platform.isAndroid) {
+      FlutterDisplayMode.setHighRefreshRate();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

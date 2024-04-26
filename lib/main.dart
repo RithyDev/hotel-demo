@@ -14,7 +14,7 @@ void main() async {
 
 Future<void> runWrapper() async {
   await applySystemDisplay();
-  runApp(const AutoRouteApp());
+  runApp(AutoRouteApp(onPageReady: (context) => setupDIOnAppReady(context)));
   // runApp(HotelApp(
   //   intialPage: RouteName.splashScreen,
   //   onPageReady: (context) => setupDIOnAppReady(context),

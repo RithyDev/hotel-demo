@@ -8,6 +8,7 @@ import 'package:hotel_app/remote/model/sign_init_info.dart';
 import 'package:hotel_app/remote/service/exceptions.dart';
 import 'package:hotel_app/resource/image_resource.dart';
 import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/route/auto_route.gr.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
 import 'package:hotel_app/widget/dialog_utils.dart';
@@ -46,11 +47,12 @@ class _SignUpPageState extends State<SignUpPage> {
   void observedOnInitStateChange(AsyncData<SignUpInitInfo>? state) async {
     if (state is Success) {
       viewModel.resetInitState();
-      Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
-        'ref': state?.data?.ref ?? '',
-        'otp': state?.data?.otp,
-        'emailOrPhone': viewModel.formData.emailOrPhone.value
-      });
+      // Navigator.of(context).pushNamed(RouteName.signUpOtpPage, arguments: {
+      //   'ref': state?.data?.ref ?? '',
+      //   'otp': state?.data?.otp,
+      //   'emailOrPhone': viewModel.formData.emailOrPhone.value
+      // });
+      _confirmOTP(state);
     } else if (state is Fail) {
       String errorMessage = 'Oop! something went wrong';
       var err = (state as Fail).throwable;
@@ -61,6 +63,14 @@ class _SignUpPageState extends State<SignUpPage> {
           title: 'Request failed', message: errorMessage);
       viewModel.resetInitState();
     }
+  }
+
+  void _confirmOTP(AsyncData<SignUpInitInfo>? state) {
+    var data = state?.data;
+    String destination = viewModel.formData.emailOrPhone.value ?? '';
+    String ref = data?.ref ?? '';
+    context.router.push(
+        SignUpOtpRoute(destination: destination, ref: ref, otp: data?.otp));
   }
 
   @override

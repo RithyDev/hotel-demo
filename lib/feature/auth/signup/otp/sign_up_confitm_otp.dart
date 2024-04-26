@@ -11,7 +11,12 @@ import 'package:hotel_app/widget/dialog_utils.dart';
 import 'package:provider/provider.dart';
 
 class SignUpConfirmOtpPage extends StatefulWidget {
-  const SignUpConfirmOtpPage({super.key});
+  final String destination;
+  final String ref;
+  final String? otp;
+
+  const SignUpConfirmOtpPage(
+      {super.key, required this.destination, required this.ref, this.otp});
 
   @override
   State<SignUpConfirmOtpPage> createState() => _SignUpConfirmOtpPageState();
@@ -26,6 +31,8 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
     super.initState();
     viewModel = Provider.of<SignUpConfirmOtpViewModel>(context, listen: false);
     initialEvent(viewModel);
+    viewModel.initialData(
+        destination: widget.destination, ref: widget.ref, otp: widget.otp);
   }
 
   void initialEvent(SignUpConfirmOtpViewModel viewModel) {
@@ -57,9 +64,6 @@ class _SignUpConfirmOtpPageState extends State<SignUpConfirmOtpPage> {
 
   @override
   Widget build(BuildContext context) {
-    var args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    viewModel.resolvedArg(args);
     return Consumer<SignUpConfirmOtpViewModel>(
         builder: (context, viewModel, child) =>
             _renderMainContent(context, viewModel));

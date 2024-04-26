@@ -17,12 +17,17 @@ class SignUpConfirmOtpViewModel extends ChangeNotifier {
   final UserRepository userRepo;
   SignUpConfirmOtpViewModel._(this.userRepo);  
 
-  void resolvedArg(Map<String, dynamic>? args) {
-    if (args != null) {
-      ref = args['ref'];
-      otp = args['otp'];
-      emailOrPhone = args['emailOrPhone'];
+  void initialData(
+    {
+      required String destination,
+      required String ref,
+      String? otp
     }
+  ) {
+    this.ref = ref;
+    emailOrPhone = destination;
+    this.otp = otp;
+    
   }
 
   void setOtpCode(String code){

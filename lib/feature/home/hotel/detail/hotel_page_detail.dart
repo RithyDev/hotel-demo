@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/booking/booking_page.dart';
@@ -11,14 +12,15 @@ import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/common_widget.dart';
 
 class HotelPageDetail extends StatefulWidget {
-  const HotelPageDetail({super.key});
+  final HotelModel? model;
+  const HotelPageDetail({super.key, this.model});
 
   @override
   State<HotelPageDetail> createState() => _HotelPageDetailState();
 }
 
 class _HotelPageDetailState extends State<HotelPageDetail> {
-  HotelModel? model;
+  HotelModel? get model => widget.model;
   final ScrollController _scrollController = ScrollController();
   Color get actionColor => isAppbarCollapsed ? Colors.black : Colors.white;
   bool isAppbarCollapsed = false;
@@ -48,11 +50,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
 
   @override
   Widget build(BuildContext context) {
-    var args = ModalRoute.of(context)?.settings.arguments;
-    if ((args != null && model == null) && args is HotelModel) {
-      model = args;
-    }
-
+  
     return Scaffold(
       body: _renderMainScrollView(context),
     );
@@ -276,4 +274,16 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   }
 
   TextStyle get _appbarTextStyle => const TextStyle(color: Colors.white);
+}
+
+
+@RoutePage()
+class HotelDetailScreen extends StatelessWidget {
+  final HotelModel? model;
+  const HotelDetailScreen({super.key, this.model});
+
+  @override
+  Widget build(BuildContext context) {
+    return HotelPageDetail(model: model);
+  }
 }

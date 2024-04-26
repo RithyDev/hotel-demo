@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/route/auto_route.gr.dart';
 import 'package:hotel_app/widget/app_network_image.dart';
 
 class ItemSuggestedHotel extends StatefulWidget {
@@ -15,7 +17,6 @@ class ItemSuggestedHotel extends StatefulWidget {
 }
 
 class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
-  
   HotelModel get model => widget.model;
   bool get isFavoritePlace => model.isSavedFavite;
 
@@ -24,7 +25,9 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
-        onTap: () { goToHotelPageDetail(context); },
+        onTap: () {
+          goToHotelPageDetail(context);
+        },
         child: Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -197,9 +200,6 @@ class _ItemSuggestedHotelState extends State<ItemSuggestedHotel> {
       const TextStyle(fontSize: 12, color: Colors.white);
 
   void goToHotelPageDetail(BuildContext context) async {
-    await Navigator.of(context)
-        .pushNamed(RouteName.hotelPageDetail, arguments: model);
-    setState(() {
-    });
+    context.router.push(HotelDetailRoute(model: model));
   }
 }
