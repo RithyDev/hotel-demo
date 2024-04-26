@@ -1,13 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
-import 'package:hotel_app/route/app_route.dart';
+import 'package:hotel_app/route/auto_route.gr.dart';
 
 class ItemHotelNearby extends StatefulWidget {
   final bool? autoEnabledPressed;
   final Color? backgroundColor;
   final HotelModel model;
   const ItemHotelNearby(
-      {super.key, required this.model, this.autoEnabledPressed, this.backgroundColor});
+      {super.key,
+      required this.model,
+      this.autoEnabledPressed,
+      this.backgroundColor});
 
   @override
   State<ItemHotelNearby> createState() => _ItemHotelNearbyState();
@@ -41,7 +45,8 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
       padding: const EdgeInsets.symmetric(vertical: 0),
       child: Container(
         decoration: BoxDecoration(
-            color: widget.backgroundColor?? Theme.of(context).primaryColor.withOpacity(0.04),
+            color: widget.backgroundColor ??
+                Theme.of(context).primaryColor.withOpacity(0.04),
             borderRadius: BorderRadius.circular(24)),
         padding: const EdgeInsets.all(12),
         child: Stack(
@@ -132,7 +137,6 @@ class _ItemHotelNearbyState extends State<ItemHotelNearby> {
   TextStyle get _priceTextStyle => const TextStyle(fontSize: 12);
 
   void _gotoPageDetial() {
-    Navigator.of(context)
-        .pushNamed(RouteName.hotelPageDetail, arguments: model);
+    context.router.push(HotelDetailRoute(model: model));
   }
 }

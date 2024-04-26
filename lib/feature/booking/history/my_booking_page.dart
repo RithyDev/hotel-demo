@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_app/feature/booking/history/booked_listed_page.dart';
 import 'package:hotel_app/feature/booking/history/tab_segment.dart';
 import 'package:hotel_app/widget/app_toolbar.dart';
 
+@RoutePage()
 class MyBookingPage extends StatefulWidget {
   const MyBookingPage({super.key});
 

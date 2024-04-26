@@ -67,18 +67,22 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   }
 
   Widget _renderMainContainer(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        _renderAppbar(context),
-        _renderCommonFacillitiesInfo(),
-        _renderOverviewContent(),
-        _renderLocationInfo(),
-        ..._reviewSessionSliverBoxs(),
-        SliverToBoxAdapter(
-          child: space(height: 120),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, box) {
+        return CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            _renderAppbar(context, box.maxWidth),
+            _renderCommonFacillitiesInfo(),
+            _renderOverviewContent(),
+            _renderLocationInfo(),
+            ..._reviewSessionSliverBoxs(),
+            SliverToBoxAdapter(
+              child: space(height: 120),
+            ),
+          ],
+        );
+      }
     );
   }
 
@@ -148,7 +152,7 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
   void navigateToBooking() {
     
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HotelBookingPage(hotel: model!,)));
+        .push(MaterialPageRoute(builder: (context) => HotelBookingPage(hotel: model!)));
   }
 
   SliverToBoxAdapter _renderLocationInfo() {
@@ -192,9 +196,11 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
 
   Widget _renderAppbar(
     BuildContext context,
+    double parentWidth
   ) {
-    var size = MediaQuery.of(context).size;
-    expandedHeight = size.width * 0.8;
+    // var size = MediaQuery.of(context).size;
+    expandedHeight = parentWidth * 0.8;
+    
     return SliverAppBar(
       pinned: true,
       toolbarHeight: 56,
@@ -202,14 +208,14 @@ class _HotelPageDetailState extends State<HotelPageDetail> {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
       forceMaterialTransparency: false,
-      actions: [_renderToolbar(size)],
+      actions: [_renderToolbar(parentWidth)],
       flexibleSpace: DetailHeaderContent(model: model),
     );
   }
 
-  Widget _renderToolbar(Size size) {
+  Widget _renderToolbar(double width) {
     return Container(
-      width: size.width,
+      width: width,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       height: 60,
       child: Row(

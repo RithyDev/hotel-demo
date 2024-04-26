@@ -6,6 +6,7 @@ import 'package:hotel_app/feature/auth/login/login_viewmodel.dart';
 import 'package:hotel_app/feature/home/main_page.dart';
 import 'package:hotel_app/model/async_data.dart';
 import 'package:hotel_app/resource/image_resource.dart';
+import 'package:hotel_app/route/auto_route.gr.dart';
 import 'package:hotel_app/widget/animated_dynamic_content.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_outlined_button.dart';
@@ -51,9 +52,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void navigateToHomeAndResetRounte() {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainPage()),
-        (route) => false);
+    // Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => const MainPage()),
+    //     (route) => false);
+    context.router
+        .pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
   }
 
   @override

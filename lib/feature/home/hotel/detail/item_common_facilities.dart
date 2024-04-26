@@ -16,17 +16,21 @@ class HotelCommonFacilities extends StatelessWidget {
   }
 
   Widget _renderListInfo(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _renderFacilitiesInfo(context, icon: Icons.air_outlined, title: 'Ac\n'),
-        _renderFacilitiesInfo(context,
-            icon: Icons.restaurant_menu_outlined, title: 'Restaurant\n'),
-        _renderFacilitiesInfo(context,
-            icon: Icons.pool_outlined, title: 'Swiming\nPool'),
-        _renderFacilitiesInfo(context,
-            icon: Icons.event_note_outlined, title: '24-Hours\nFlont Desk')
-      ],
+    return LayoutBuilder(
+      builder: (context, box) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _renderFacilitiesInfo(context, icon: Icons.air_outlined, title: 'Ac\n', parentWidth: box.maxWidth),
+            _renderFacilitiesInfo(context,
+                icon: Icons.restaurant_menu_outlined, title: 'Restaurant\n', parentWidth: box.maxWidth),
+            _renderFacilitiesInfo(context,
+                icon: Icons.pool_outlined, title: 'Swiming\nPool', parentWidth: box.maxWidth),
+            _renderFacilitiesInfo(context,
+                icon: Icons.event_note_outlined, title: '24-Hours\nFlont Desk', parentWidth: box.maxWidth)
+          ],
+        );
+      }
     );
   }
 
@@ -48,10 +52,10 @@ class HotelCommonFacilities extends StatelessWidget {
   }
 
   Widget _renderFacilitiesInfo(BuildContext context,
-      {required IconData icon, required String title}) {
-    var size = MediaQuery.of(context).size;
+      {required IconData icon, required String title, required double parentWidth}) {
+    // var size = MediaQuery.of(context).size;
     var p = 16;
-    double itemSize = (size.width / 4) - p * 2;
+    double itemSize = (parentWidth / 4) - p * 2;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

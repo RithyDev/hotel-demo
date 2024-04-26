@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/home/home_viewmodel.dart';
@@ -64,7 +65,10 @@ class _HomePageState extends State<HomePage> {
             delegate: SliverChildListDelegate([
           _renderRecommendedHotelsContainer(),
         ])),
-        _renderSliverBox(child: _renderSuggestedHotels(context, viewModel)),
+        _renderSliverBox(child: LayoutBuilder(builder: (context, box) {
+          return _renderSuggestedHotels(context, viewModel,
+              parentWidth: box.maxWidth);
+        })),
         _renderSliverBox(child: _nearByHotelTitle(context)),
         _renderNearbyHotel(context, viewModel)
       ],
@@ -116,11 +120,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _renderSuggestedHotels(BuildContext context, HomeViewModel viewModel) {
-    double screenWidth = MediaQuery.of(context).size.width;
+  Widget _renderSuggestedHotels(BuildContext context, HomeViewModel viewModel,
+      {double? parentWidth}) {
+    double screenWidth = parentWidth ?? MediaQuery.of(context).size.width;
     double itemWith = screenWidth * 0.7;
     double itemHight = itemWith * 1.22;
     var items = viewModel.recommended;
+
     return SizedBox(
       height: itemHight,
       child: ListView.builder(
@@ -137,7 +143,6 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => goToHotelPageDetail(context, items[index]))),
       ),
     );
-
   }
 
   SliverToBoxAdapter _renderSliverBox({required Widget child}) =>
@@ -153,6 +158,19 @@ class _HomePageState extends State<HomePage> {
       const TextStyle(fontWeight: FontWeight.w600, fontSize: 16);
 
   void goToHotelPageDetail(BuildContext context, HotelModel model) {
-    Navigator.of(context).pushNamed(RouteName.hotelPageDetail, arguments: model);
+    Navigator.of(context)
+        .pushNamed(RouteName.hotelPageDetail, arguments: model);
+  }
+}
+
+
+@RoutePage()
+class TabHomeScreen extends StatelessWidget {
+  
+  const TabHomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const HomePage();
   }
 }

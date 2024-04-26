@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hotel_app/feature/onboard/onboard_page.dart';
 import 'package:hotel_app/route/auto_route.gr.dart';
+import 'package:hotel_app/widget/mobile_sticky_layout.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -30,7 +31,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
     //         FadeTransition(opacity: animation, child: child),
     //     transitionDuration: const Duration(milliseconds: 400));
     // Navigator.of(context).pushReplacement(route);
-    context.router.pushAndPopUntil(const MainRoute(), predicate: (route) => false);
+    // context.router.pushAndPopUntil(const MainRoute(), predicate: (route) => false);
+    context.router.pushAndPopUntil(const OnboardRoute(), predicate: (route) => false);
   }
 
   @override
@@ -101,7 +103,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   TextStyle get titleStyle =>
       const TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
 }
-
 
 @RoutePage()
 class SplashScreen extends StatelessWidget {
