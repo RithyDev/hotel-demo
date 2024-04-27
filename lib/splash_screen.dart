@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:hotel_app/feature/onboard/onboard_page.dart';
 import 'package:hotel_app/route/auto_route.gr.dart';
-import 'package:hotel_app/widget/mobile_sticky_layout.dart';
 
 class SplashScreenPage extends StatefulWidget {
   const SplashScreenPage({super.key});
@@ -24,15 +22,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   void navigateNext() {
-    // Widget page = const OnboardPage();
-    // final route = PageRouteBuilder(
-    //     pageBuilder: (_, __, ___) => page,
-    //     transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-    //         FadeTransition(opacity: animation, child: child),
-    //     transitionDuration: const Duration(milliseconds: 400));
-    // Navigator.of(context).pushReplacement(route);
-    // context.router.pushAndPopUntil(const MainRoute(), predicate: (route) => false);
-    context.router.pushAndPopUntil(const OnboardRoute(), predicate: (route) => false);
+    context.router.pushAndPopUntil(const HomeRoute(), predicate: (route) => false);
   }
 
   @override

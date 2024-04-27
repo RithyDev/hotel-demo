@@ -22,7 +22,7 @@ class AppToolbar extends StatelessWidget {
                   ? _renderBackButton(context)
                   : space(width: 42),
               _renderTextTitle(),
-              space(width: 42)
+              space(width: 56)
             ],
           ),
         ),

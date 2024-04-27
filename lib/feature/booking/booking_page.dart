@@ -10,6 +10,7 @@ import 'package:hotel_app/feature/home/hotel/model/hotel_model.dart';
 import 'package:hotel_app/widget/app_button_styles.dart';
 import 'package:hotel_app/widget/app_checkbox.dart';
 import 'package:hotel_app/widget/app_date_range_picker.dart';
+import 'package:hotel_app/widget/app_toolbar.dart';
 import 'package:hotel_app/widget/common_widget.dart';
 import 'package:hotel_app/widget/date_time_utils.dart';
 import 'package:hotel_app/widget/drop_down_selector.dart';
@@ -55,12 +56,37 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
 
   Widget _renderContinueButton(BuildContext context) {
     VoidCallback? onPressed = viewModel.shouldEnabledButton ? _checkout : null;
+    Color color = Colors.white;
     return Positioned(
-      bottom: 16,
-      left: 24,
-      right: 24,
-      child:
-          appRoundedButton(context, onPressed: onPressed, title: 'Continues'),
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 40),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  color,
+                  color,
+                  color,
+                  color.withOpacity(0.8),
+                  color.withOpacity(0.0)
+                ], // White to transparent
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: appRoundedButton(context,
+                  onPressed: onPressed, title: 'Continues'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -78,37 +104,43 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
   }
 
   Widget _renderScrollableContent() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            _renderSelectDate(),
-            space(height: 12),
-            _renderSelectGuests(),
-            space(height: 12),
-            _renderSelectRoomType(),
-            space(height: 12),
-            _renderInputPhoneNumber(),
-            space(height: 12),
-            AppCheckBox(
-              onChanged: (value) => {},
-              title: 'Keep me update on more hotel and new from this apps.',
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                _renderSelectDate(),
+                space(height: 12),
+                _renderSelectGuests(),
+                space(height: 12),
+                _renderSelectRoomType(),
+                space(height: 12),
+                _renderInputPhoneNumber(),
+                space(height: 12),
+                AppCheckBox(
+                  onChanged: (value) => {},
+                  title: 'Keep me update on more hotel and new from this apps.',
+                ),
+                space(height: 12),
+                AppCheckBox(
+                  onChanged: (value) => {},
+                  title:
+                      'Send me emials about the best hotels nearby or discount',
+                ),
+                space(height: 12),
+                AppCheckBox(
+                  onChanged: (value) => {},
+                  customChild: _renderTextTermAndCondition(),
+                ),
+                space(height: 120),
+                
+              ],
             ),
-            space(height: 12),
-            AppCheckBox(
-              onChanged: (value) => {},
-              title: 'Send me emials about the best hotels nearby or discount',
-            ),
-            space(height: 12),
-            AppCheckBox(
-              onChanged: (value) => {},
-              customChild: _renderTextTermAndCondition(),
-            ),
-            space(height: 12),
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
     );
   }
 
@@ -190,19 +222,8 @@ class _HotelBookingPageState extends State<HotelBookingPage> {
   }
 
   Widget _renderToolbar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(Icons.arrow_back),
-          const Text(
-            'Form detail',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          space(width: 24)
-        ],
-      ),
+    return const AppToolbar(
+      title: 'Form detail'
     );
   }
 

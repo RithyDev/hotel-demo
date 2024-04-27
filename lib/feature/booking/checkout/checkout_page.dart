@@ -103,7 +103,8 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
       slivers: [
         _renderHotelInfo(),
         _renderBookingListedInfo(),
-        _renderPromoCode()
+        _renderPromoCode(),
+        
       ],
     );
   }
@@ -138,7 +139,8 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
             const Text('Promo',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             space(height: 6),
-            _renderPromoCodeButton()
+            _renderPromoCodeButton(),
+            space(height: 120)
           ],
         ),
       ),
@@ -293,7 +295,10 @@ class _CheckoutRoomPageState extends State<CheckoutRoomPage> {
   Future<void> _selectPromoCode() async {
     await showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (context) =>
-            PromoCodeSelectorPage(promoCodes: viewModel.promoCodes));
+            FractionallySizedBox(
+              heightFactor: 0.8,
+              child: PromoCodeSelectorPage(promoCodes: viewModel.promoCodes)));
   }
 }
